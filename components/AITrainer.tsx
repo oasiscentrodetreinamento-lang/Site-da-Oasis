@@ -40,12 +40,12 @@ const AITrainer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-brand font-bold uppercase tracking-widest mb-2">Desenvolvido com Gemini AI</h2>
+          <h2 className="text-brand font-bold uppercase tracking-widest mb-2">Tecnologia e Performance</h2>
           <h3 className="text-4xl md:text-5xl font-display font-bold text-white uppercase">
-            Seu Personal Trainer <span className="text-brand-accent">Inteligente</span>
+            Seu Assistente de Treino <span className="text-brand-accent">Virtual</span>
           </h3>
           <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
-            Obtenha um plano de treino diário personalizado instantaneamente, adaptado aos seus objetivos, experiência e equipamento disponível.
+            Complemente seu acompanhamento presencial. Obtenha um plano de treino extra instantaneamente, adaptado aos seus objetivos para os dias em que não puder vir ao CT.
           </p>
         </div>
 
@@ -150,7 +150,7 @@ const AITrainer: React.FC = () => {
                   <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                 </div>
                 <h4 className="text-xl font-bold text-white mb-2">Nenhum Treino Gerado Ainda</h4>
-                <p className="text-slate-400">Configure suas preferências e clique em "Gerar Treino" para que a IA crie sua sessão perfeita.</p>
+                <p className="text-slate-400">Configure suas preferências e clique em "Gerar Treino" para que nosso sistema crie sua sessão perfeita.</p>
               </div>
             )}
 

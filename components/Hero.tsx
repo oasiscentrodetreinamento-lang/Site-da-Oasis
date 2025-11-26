@@ -43,7 +43,7 @@ const Hero: React.FC = () => {
             Ver Nossos Planos
           </button>
           <button onClick={() => document.getElementById(NavLink.TRAINER)?.scrollIntoView({behavior: 'smooth'})} className="bg-transparent border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest transition-all backdrop-blur-sm">
-            Testar Personal IA
+            Gerar Treino Online
           </button>
         </div>
       </div>

@@ -43,7 +43,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
             { id: NavLink.HOME, label: 'Início' },
             { id: NavLink.BLOG, label: 'Blog' },
             { id: NavLink.CLASSES, label: 'Aulas' },
-            { id: NavLink.TRAINER, label: 'Personal IA' },
+            { id: NavLink.TRAINER, label: 'Treino Digital' },
             { id: NavLink.MEMBERSHIP, label: 'Planos' },
           ].map((link) => (
             <button
@@ -88,7 +88,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
               { id: NavLink.HOME, label: 'Início' },
               { id: NavLink.BLOG, label: 'Blog' },
               { id: NavLink.CLASSES, label: 'Aulas' },
-              { id: NavLink.TRAINER, label: 'Personal IA' },
+              { id: NavLink.TRAINER, label: 'Treino Digital' },
               { id: NavLink.MEMBERSHIP, label: 'Planos' },
             ].map((link) => (
               <button

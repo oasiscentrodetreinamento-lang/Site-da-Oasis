@@ -102,7 +102,7 @@ const Membership: React.FC = () => {
               </li>
               <li className="flex items-center text-white">
                 <svg className="w-5 h-5 text-brand-accent mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                Acesso ao Personal IA
+                Acesso ao Treino Digital
               </li>
             </ul>
             <button className="w-full py-4 bg-brand hover:bg-brand-dark text-slate-900 rounded-lg font-bold uppercase transition-colors shadow-lg transform hover:scale-[1.02]">Garantir Oferta Anual</button>
