@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { NavLink, UserPreferences, WorkoutPlan } from '../types';
 import { generateWorkoutPlan } from '../services/geminiService';
+import { useAdmin } from '../contexts/AdminContext';
 
 const AITrainer: React.FC = () => {
+  const { currentUser, saveWorkout, openAuthModal } = useAdmin();
   const [loading, setLoading] = useState(false);
   const [workout, setWorkout] = useState<WorkoutPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [savedSuccess, setSavedSuccess] = useState(false);
   
   const [prefs, setPrefs] = useState<UserPreferences>({
     goal: 'Ganhar Músculo',
@@ -18,6 +21,7 @@ const AITrainer: React.FC = () => {
     setLoading(true);
     setError(null);
     setWorkout(null);
+    setSavedSuccess(false);
 
     try {
       const plan = await generateWorkoutPlan(prefs);
@@ -31,6 +35,19 @@ const AITrainer: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSave = () => {
+    if (!workout) return;
+    
+    if (!currentUser) {
+       openAuthModal();
+       return;
+    }
+
+    saveWorkout(workout);
+    setSavedSuccess(true);
+    setTimeout(() => setSavedSuccess(false), 3000);
   };
 
   return (
@@ -172,23 +189,44 @@ const AITrainer: React.FC = () => {
                    <div className="absolute top-0 right-0 p-8 opacity-10">
                       <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 2 7.71 3.43 9.14 2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 22 16.29 20.57 14.86z"/></svg>
                    </div>
-                   <div className="relative z-10">
-                     <div className="flex justify-between items-start mb-4">
-                       <h3 className="text-3xl font-display uppercase font-bold tracking-wide text-slate-900">{workout.planName}</h3>
-                       <span className="bg-slate-900/20 px-3 py-1 rounded text-sm font-bold uppercase backdrop-blur-md border border-slate-900/20 text-slate-900">
-                         {workout.difficulty}
-                       </span>
+                   <div className="relative z-10 flex flex-col md:flex-row justify-between md:items-start gap-4">
+                     <div>
+                       <div className="flex justify-between items-start mb-4 gap-4">
+                         <h3 className="text-3xl font-display uppercase font-bold tracking-wide text-slate-900">{workout.planName}</h3>
+                         <span className="bg-slate-900/20 px-3 py-1 rounded text-sm font-bold uppercase backdrop-blur-md border border-slate-900/20 text-slate-900 whitespace-nowrap">
+                           {workout.difficulty}
+                         </span>
+                       </div>
+                       <div className="flex gap-6 text-sm font-medium text-slate-800">
+                         <span className="flex items-center gap-2">
+                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                           {workout.duration} Min
+                         </span>
+                          <span className="flex items-center gap-2">
+                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
+                           {prefs.goal}
+                         </span>
+                       </div>
                      </div>
-                     <div className="flex gap-6 text-sm font-medium text-slate-800">
-                       <span className="flex items-center gap-2">
-                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                         {workout.duration} Min
-                       </span>
-                        <span className="flex items-center gap-2">
-                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
-                         {prefs.goal}
-                       </span>
-                     </div>
+                     
+                     <button 
+                        onClick={handleSave}
+                        className={`px-4 py-2 rounded-lg font-bold uppercase text-xs tracking-wider shadow-lg flex items-center gap-2 transition-all ${
+                            savedSuccess ? 'bg-green-600 text-white cursor-default' : 'bg-slate-900 text-brand hover:bg-slate-800'
+                        }`}
+                     >
+                        {savedSuccess ? (
+                             <>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                Salvo!
+                             </>
+                        ) : (
+                             <>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+                                {currentUser ? 'Salvar no Perfil' : 'Entrar para Salvar'}
+                             </>
+                        )}
+                     </button>
                    </div>
                 </div>
 

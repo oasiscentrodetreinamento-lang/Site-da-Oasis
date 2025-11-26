@@ -7,6 +7,7 @@ import Membership from './components/Membership';
 import Footer from './components/Footer';
 import ComingSoon from './components/ComingSoon';
 import Blog from './components/Blog';
+import AuthModal from './components/AuthModal';
 import { AdminProvider } from './contexts/AdminContext';
 import { NavLink } from './types';
 
@@ -38,6 +39,7 @@ function App() {
     <AdminProvider>
       <div className="bg-slate-900 min-h-screen text-slate-50 selection:bg-brand selection:text-white flex flex-col">
         <Navbar onNavigate={handleNavigate} currentView={currentView} />
+        <AuthModal />
         
         <main className="flex-grow">
           {currentView === 'home' ? (

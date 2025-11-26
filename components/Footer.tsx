@@ -1,33 +1,15 @@
-import React, { useState } from 'react';
-import { useAdmin } from '../contexts/AdminContext';
+import React from 'react';
 
 const Footer: React.FC = () => {
-  const { login, logout, isAdmin } = useAdmin();
-  const [showLogin, setShowLogin] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (login(username, password)) {
-      setShowLogin(false);
-      setUsername('');
-      setPassword('');
-      setError('');
-    } else {
-      setError('Credenciais inválidas');
-    }
-  };
-
   return (
     <footer className="bg-slate-950 border-t border-slate-900 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-1 md:col-span-2">
-            <span className="text-3xl font-display font-bold text-white italic tracking-wider mb-6 block">
-              OASIS<span className="text-brand">CT</span>
-            </span>
+             <div className="leading-none mb-6">
+                <span className="block text-3xl font-display font-bold text-white tracking-wide">OASIS</span>
+                <span className="block text-[10px] font-sans font-bold text-brand uppercase tracking-[0.3em] -mt-1">Centro de Treinamento</span>
+             </div>
             <p className="text-slate-400 max-w-sm mb-6">
               Oasis Centro de Treinamento. O seu lugar para evoluir, suar e conquistar seus objetivos.
               Aulas coletivas vibrantes e tecnologia de ponta.
@@ -81,64 +63,8 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-slate-600 text-sm">© 2024 Oasis Centro de Treinamento. Todos os direitos reservados.</p>
-          <div className="flex items-center space-x-6 mt-4 md:mt-0">
-            <button 
-                onClick={() => isAdmin ? logout() : setShowLogin(true)}
-                className="text-slate-600 hover:text-brand text-sm font-semibold transition-colors uppercase tracking-wider"
-            >
-                {isAdmin ? 'Sair do Admin' : 'Área Administrativa'}
-            </button>
-          </div>
         </div>
       </div>
-
-      {/* Login Modal */}
-      {showLogin && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="bg-slate-900 p-8 rounded-2xl border border-slate-700 w-full max-w-md shadow-2xl relative">
-                <button 
-                    onClick={() => setShowLogin(false)}
-                    className="absolute top-4 right-4 text-slate-500 hover:text-white"
-                >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-                <h3 className="text-2xl font-display font-bold text-white mb-6 uppercase text-center">Acesso Administrativo</h3>
-                
-                {error && (
-                    <div className="bg-red-500/10 border border-red-500/50 text-red-200 text-sm p-3 rounded mb-4 text-center">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleLogin} className="space-y-4">
-                    <div>
-                        <label className="block text-slate-400 text-sm font-bold mb-2">Usuário</label>
-                        <input 
-                            type="text" 
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:border-brand focus:outline-none transition-colors"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-slate-400 text-sm font-bold mb-2">Senha</label>
-                        <input 
-                            type="password" 
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:border-brand focus:outline-none transition-colors"
-                        />
-                    </div>
-                    <button 
-                        type="submit"
-                        className="w-full bg-brand hover:bg-brand-dark text-slate-900 font-bold py-3 rounded-lg uppercase tracking-wider transition-colors mt-2"
-                    >
-                        Entrar
-                    </button>
-                </form>
-            </div>
-        </div>
-      )}
     </footer>
   );
 };
