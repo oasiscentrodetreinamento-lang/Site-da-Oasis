@@ -51,6 +51,8 @@ export interface Comment {
 
 export interface BlogPost {
   id: string;
+  title: string;
+  category: string;
   content: string;
   image?: string;
   date: string;
