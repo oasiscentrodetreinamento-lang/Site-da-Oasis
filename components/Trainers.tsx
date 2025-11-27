@@ -56,7 +56,7 @@ const Trainers: React.FC = () => {
                 
                 {/* Gradient Overlay */}
                 <div 
-                   className="absolute inset-0 opacity-80 group-hover:opacity-60 transition-opacity"
+                   className="absolute inset-0 opacity-80 group-hover:opacity-60 transition-opacity pointer-events-none"
                    style={{
                       background: `linear-gradient(to top, #0F172A 10%, transparent 60%)`
                    }}
@@ -68,15 +68,15 @@ const Trainers: React.FC = () => {
                 ></div>
 
                 {/* Content */}
-                <div className="absolute bottom-0 left-0 p-6 w-full">
+                <div className="absolute bottom-0 left-0 p-6 w-full pointer-events-none">
                     <div 
                        className="w-8 h-1 mb-2 rounded transition-all duration-300 group-hover:w-16"
                        style={{ backgroundColor: trainer.color }}
                     ></div>
-                    <h4 className="text-xl font-display font-bold text-white uppercase mb-1">
+                    <h4 className="text-xl font-display font-bold text-white uppercase mb-1 pointer-events-auto">
                        <Editable id={`trainer-${trainer.id}-name`} defaultContent="Nome" />
                     </h4>
-                    <p className="text-slate-400 text-xs font-bold uppercase tracking-wider group-hover:text-white transition-colors">
+                    <p className="text-slate-400 text-xs font-bold uppercase tracking-wider group-hover:text-white transition-colors pointer-events-auto">
                        <Editable id={`trainer-${trainer.id}-role`} defaultContent="Cargo" />
                     </p>
                 </div>
@@ -112,7 +112,7 @@ const Trainers: React.FC = () => {
                       type="image" 
                       className="w-full h-full object-cover"
                    />
-                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent md:bg-gradient-to-r"></div>
+                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent md:bg-gradient-to-r pointer-events-none"></div>
                </div>
 
                {/* Info Side */}

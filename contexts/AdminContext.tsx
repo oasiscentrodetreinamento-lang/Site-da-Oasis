@@ -77,7 +77,7 @@ const defaultContent: Record<string, string> = {
   'trainer-1-name': 'Diego',
   'trainer-1-role': 'Líder Técnico',
   'trainer-1-bio': 'Treinador experiente com amplo conhecimento e especialização em exercícios para a 3ª idade e gestantes. Diego garante segurança e adaptação total para cada fase da vida.',
-  'trainer-1-img': 'https://images.unsplash.com/photo-1567013127542-490d757e51fc?q=80&w=1887&auto=format&fit=crop',
+  'trainer-1-img': 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?q=80&w=2082&auto=format&fit=crop',
   'trainer-2-name': 'Luiz Marins',
   'trainer-2-role': 'Treinador',
   'trainer-2-bio': 'Especialista em Mat Pilates e treinos para alta performance. Luiz combina o controle corporal do Pilates com a intensidade necessária para elevar o nível do seu treino.',

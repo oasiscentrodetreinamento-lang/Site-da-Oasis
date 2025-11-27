@@ -126,12 +126,6 @@ const AuthModal: React.FC = () => {
               {mode === 'login' ? 'Acessar Conta' : 'Cadastrar Grátis'}
             </button>
           </form>
-
-          {mode === 'login' && (
-             <p className="text-center text-slate-500 text-xs mt-6">
-                Admin Demo: User: <span className="text-slate-300">admoasis</span> | Senha: <span className="text-slate-300">oasis123</span>
-             </p>
-          )}
         </div>
       </div>
     </div>
