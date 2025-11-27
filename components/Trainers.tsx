@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Editable from './Editable';
 
 const trainersList = [
-  { id: 1, color: '#FACC15' }, // Brand Yellow - Head Coach
-  { id: 2, color: '#34D399' }, // Emerald Green - Spinning (Energy)
-  { id: 3, color: '#F472B6' }, // Pink - Martial Arts/Intensity or Dance
-  { id: 4, color: '#60A5FA' }, // Blue - Pilates (Calm)
-  { id: 5, color: '#A78BFA' }, // Purple - Cross Training
-  { id: 6, color: '#FB923C' }, // Orange - Dance
-  { id: 7, color: '#22D3EE' }, // Cyan - Kids
+  { id: 1, color: '#FACC15' }, // Brand Yellow - Diego
+  { id: 2, color: '#34D399' }, // Emerald Green - Luiz
+  { id: 3, color: '#22D3EE' }, // Cyan - Arthur
+  { id: 4, color: '#60A5FA' }, // Blue - Mateus
+  { id: 5, color: '#A78BFA' }, // Purple - Taynan
+  { id: 6, color: '#FB923C' }, // Orange - Igor
+  { id: 7, color: '#F472B6' }, // Pink - Amanda
 ];
 
 const Trainers: React.FC = () => {
