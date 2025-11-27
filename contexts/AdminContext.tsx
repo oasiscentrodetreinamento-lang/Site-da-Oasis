@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { BlogPost, Comment, User, WorkoutPlan } from '../types';
+import { BlogPost, Comment, User, WorkoutPlan, UserPreferences } from '../types';
 
 interface AdminContextType {
   currentUser: User | null;
@@ -22,6 +22,11 @@ interface AdminContextType {
   // User Data Management
   saveWorkout: (workout: WorkoutPlan) => void;
   deleteWorkout: (index: number) => void;
+
+  // Template Bank (Offline Workouts)
+  findTemplate: (prefs: UserPreferences) => WorkoutPlan | null;
+  saveTemplate: (workout: WorkoutPlan) => void;
+  templateCount: number;
   
   // UI State
   isAuthModalOpen: boolean;
@@ -53,6 +58,105 @@ const defaultContent: Record<string, string> = {
   'news-list-dance': '• Ballet Clássico\n• Jazz\n• Danças Urbanas\n• Fit Dance',
 };
 
+// Initial Database of Workouts (Fallback for offline/production)
+const defaultTemplates: WorkoutPlan[] = [
+  {
+    planName: "Hipertrofia Iniciante A",
+    difficulty: "Iniciante",
+    targetGoal: "Ganhar Músculo",
+    targetLevel: "Iniciante",
+    duration: "45",
+    warmup: "5 min esteira leve + 10 rotações de ombros e braços.",
+    exercises: [
+      { name: "Agachamento Livre (Peso do Corpo)", sets: "3", reps: "12-15", notes: "Mantenha a postura ereta." },
+      { name: "Flexão de Braços (pode usar joelhos)", sets: "3", reps: "8-12", notes: "Contraia o abdômen." },
+      { name: "Puxada Alta (ou Remada Curvada)", sets: "3", reps: "12", notes: "Foco nas costas." },
+      { name: "Desenvolvimento com Halteres", sets: "3", reps: "10-12", notes: "Cuidado com a lombar." },
+      { name: "Abdominal Supra", sets: "3", reps: "15-20", notes: "Expire na subida." }
+    ],
+    cooldown: "Alongamento estático de pernas e peitoral (30s cada posição)."
+  },
+  {
+    planName: "Hipertrofia Total Body",
+    difficulty: "Intermediário",
+    targetGoal: "Ganhar Músculo",
+    targetLevel: "Intermediário",
+    duration: "60",
+    warmup: "5 min bike carga média + mobilidade de quadril.",
+    exercises: [
+      { name: "Agachamento com Barra/Halter", sets: "4", reps: "8-10", notes: "Carga moderada a alta." },
+      { name: "Supino Reto", sets: "4", reps: "8-10", notes: "Controle a descida." },
+      { name: "Levantamento Terra Romeno", sets: "3", reps: "10-12", notes: "Foco nos posteriores." },
+      { name: "Remada Curvada", sets: "4", reps: "10", notes: "Tronco firme." },
+      { name: "Elevação Lateral", sets: "3", reps: "12-15", notes: "Para ombros." }
+    ],
+    cooldown: "5 min caminhada leve + alongamento geral."
+  },
+  {
+    planName: "Queima de Gordura Express",
+    difficulty: "Iniciante",
+    targetGoal: "Perder Peso",
+    targetLevel: "Iniciante",
+    duration: "30",
+    warmup: "3 min polichinelos e corrida estacionária.",
+    exercises: [
+      { name: "Agachamento com Salto (ou rápido)", sets: "3", reps: "15", notes: "Explosão na subida." },
+      { name: "Flexão de Braços", sets: "3", reps: "10", notes: "Ritmo constante." },
+      { name: "Mountain Climbers", sets: "3", reps: "30s", notes: "Acelere se possível." },
+      { name: "Passada (Lunge)", sets: "3", reps: "10 cada perna", notes: "Equilíbrio." },
+      { name: "Prancha Abdominal", sets: "3", reps: "20-30s", notes: "Corpo reto." }
+    ],
+    cooldown: "Respiração profunda e alongamento leve."
+  },
+  {
+    planName: "Metabólico Insano",
+    difficulty: "Avançado",
+    targetGoal: "Perder Peso",
+    targetLevel: "Avançado",
+    duration: "45",
+    warmup: "5 min corda ou corrida + mobilidade articular.",
+    exercises: [
+      { name: "Burpees", sets: "4", reps: "15", notes: "Sem parar." },
+      { name: "Thrusters (Agachamento + Desenvolvimento)", sets: "4", reps: "12", notes: "Use o impulso das pernas." },
+      { name: "Kettlebell Swing (ou Halter)", sets: "4", reps: "20", notes: "Quadril explosivo." },
+      { name: "Box Jump (ou Salto em Distância)", sets: "4", reps: "10", notes: "Amortecer a queda." },
+      { name: "Prancha Dinâmica", sets: "4", reps: "45s", notes: "Variando apoios." }
+    ],
+    cooldown: "Caminhada lenta até baixar FC + Alongamento."
+  },
+  {
+    planName: "Força Pura",
+    difficulty: "Avançado",
+    targetGoal: "Treino de Força",
+    targetLevel: "Avançado",
+    duration: "60",
+    warmup: "Aquecimento específico com cargas leves nos movimentos principais.",
+    exercises: [
+      { name: "Agachamento Livre", sets: "5", reps: "5", notes: "Carga alta, descanso longo (2-3min)." },
+      { name: "Supino Reto", sets: "5", reps: "5", notes: "Foco na execução." },
+      { name: "Levantamento Terra", sets: "3", reps: "5", notes: "Técnica perfeita." },
+      { name: "Barra Fixa (com peso se possível)", sets: "4", reps: "6-8", notes: "Amplitude total." }
+    ],
+    cooldown: "Liberação miofascial (rolinho) se disponível ou alongamento passivo."
+  },
+  {
+    planName: "Cardio HIIT Queima Total",
+    difficulty: "Intermediário",
+    targetGoal: "Perder Peso",
+    targetLevel: "Intermediário",
+    duration: "30",
+    warmup: "5 min corrida estacionária e polichinelos.",
+    exercises: [
+      { name: "Corrida Estacionária Joelho Alto", sets: "4", reps: "45s", notes: "Intensidade máxima." },
+      { name: "Sprawl (Meio Burpee)", sets: "4", reps: "15", notes: "Rápido." },
+      { name: "Abdominal Remador", sets: "4", reps: "20", notes: "Expira ao subir." },
+      { name: "Agachamento Isométrico", sets: "4", reps: "45s", notes: "Segura firme." },
+      { name: "Polichinelo", sets: "4", reps: "60s", notes: "Ritmo constante." }
+    ],
+    cooldown: "Caminhada lenta e respiração profunda."
+  }
+];
+
 const defaultPosts: BlogPost[] = [
   {
     id: '1',
@@ -75,6 +179,9 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [content, setContent] = useState<Record<string, string>>(defaultContent);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(defaultPosts);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  
+  // Template Bank State
+  const [workoutTemplates, setWorkoutTemplates] = useState<WorkoutPlan[]>(defaultTemplates);
 
   // Initialize data from local storage
   useEffect(() => {
@@ -85,7 +192,6 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     
     const savedPosts = localStorage.getItem('blogPosts');
     if (savedPosts) {
-      // Migration logic: Ensure new fields (likedBy, comments) exist if loading old data
       const parsedPosts: BlogPost[] = JSON.parse(savedPosts).map((p: any) => ({
         ...p,
         likedBy: Array.isArray(p.likedBy) ? p.likedBy : [],
@@ -93,20 +199,25 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       }));
       setBlogPosts(parsedPosts);
     }
+    
+    const savedTemplates = localStorage.getItem('workoutTemplates');
+    if (savedTemplates) {
+       const parsedTemplates = JSON.parse(savedTemplates);
+       setWorkoutTemplates(parsedTemplates);
+    } else {
+       localStorage.setItem('workoutTemplates', JSON.stringify(defaultTemplates));
+    }
 
-    // Check for active session
     const savedSession = localStorage.getItem('currentUser');
     if (savedSession) {
       setCurrentUser(JSON.parse(savedSession));
     }
   }, []);
 
-  // Update localStorage whenever currentUser changes (to sync saved workouts)
+  // Update localStorage whenever currentUser changes
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      
-      // Also update the user in the main 'users' database in localStorage
       if (!currentUser.isAdmin) {
         const usersStr = localStorage.getItem('users');
         if (usersStr) {
@@ -121,7 +232,6 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, [currentUser]);
 
   const login = (u: string, p: string) => {
-    // 1. Check Admin
     if (u === 'admoasis' && p === 'oasis123') {
       const adminUser: User = {
         id: 'admin',
@@ -134,7 +244,6 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       return true;
     }
 
-    // 2. Check Registered Users
     const usersStr = localStorage.getItem('users');
     if (usersStr) {
       const users: User[] = JSON.parse(usersStr);
@@ -144,17 +253,13 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         return true;
       }
     }
-
     return false;
   };
 
   const register = (name: string, u: string, p: string) => {
     const usersStr = localStorage.getItem('users');
     const users: User[] = usersStr ? JSON.parse(usersStr) : [];
-
-    if (users.find(user => user.username === u)) {
-      return false; // User already exists
-    }
+    if (users.find(user => user.username === u)) return false;
 
     const newUser: User = {
       id: Date.now().toString(),
@@ -167,7 +272,7 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     users.push(newUser);
     localStorage.setItem('users', JSON.stringify(users));
-    setCurrentUser(newUser); // Auto login after register
+    setCurrentUser(newUser);
     return true;
   };
 
@@ -184,7 +289,6 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const addPost = (text: string, image?: string) => {
     if (!currentUser) return;
-
     const newPost: BlogPost = {
       id: Date.now().toString(),
       content: text,
@@ -205,10 +309,8 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const deletePost = (id: string) => {
-    // Admins can delete all, Users can only delete their own
     const post = blogPosts.find(p => p.id === id);
     if (!post) return;
-
     if (currentUser?.isAdmin || post.author.id === currentUser?.id) {
       const newPosts = blogPosts.filter(p => p.id !== id);
       setBlogPosts(newPosts);
@@ -218,7 +320,6 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const toggleLike = (postId: string) => {
     if (!currentUser) return;
-
     const newPosts = blogPosts.map(post => {
       if (post.id === postId) {
         const hasLiked = post.likedBy.includes(currentUser.id);
@@ -229,14 +330,12 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       }
       return post;
     });
-
     setBlogPosts(newPosts);
     localStorage.setItem('blogPosts', JSON.stringify(newPosts));
   };
 
   const addComment = (postId: string, content: string) => {
     if (!currentUser) return;
-
     const newComment: Comment = {
       id: Date.now().toString(),
       content,
@@ -248,21 +347,18 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         avatar: currentUser.avatar
       }
     };
-
     const newPosts = blogPosts.map(post => {
       if (post.id === postId) {
         return { ...post, comments: [...post.comments, newComment] };
       }
       return post;
     });
-
     setBlogPosts(newPosts);
     localStorage.setItem('blogPosts', JSON.stringify(newPosts));
   };
 
   const saveWorkout = (workout: WorkoutPlan) => {
     if (!currentUser) return;
-    
     const workoutWithDate = { ...workout, dateCreated: new Date().toISOString() };
     const updatedUser = { 
       ...currentUser, 
@@ -276,6 +372,27 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const newWorkouts = [...currentUser.savedWorkouts];
     newWorkouts.splice(index, 1);
     setCurrentUser({ ...currentUser, savedWorkouts: newWorkouts });
+  };
+
+  // --- Template Bank Logic ---
+  
+  const findTemplate = (prefs: UserPreferences): WorkoutPlan | null => {
+    const matches = workoutTemplates.filter(t => 
+      t.targetGoal === prefs.goal && 
+      t.targetLevel === prefs.level
+    );
+
+    if (matches.length > 0) {
+      return matches[Math.floor(Math.random() * matches.length)];
+    }
+    
+    return null;
+  };
+
+  const saveTemplate = (workout: WorkoutPlan) => {
+    const newTemplates = [...workoutTemplates, workout];
+    setWorkoutTemplates(newTemplates);
+    localStorage.setItem('workoutTemplates', JSON.stringify(newTemplates));
   };
 
   return (
@@ -294,6 +411,9 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       addComment,
       saveWorkout,
       deleteWorkout,
+      findTemplate,
+      saveTemplate,
+      templateCount: workoutTemplates.length,
       isAuthModalOpen,
       openAuthModal: () => setIsAuthModalOpen(true),
       closeAuthModal: () => setIsAuthModalOpen(false)

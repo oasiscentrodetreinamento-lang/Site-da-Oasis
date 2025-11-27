@@ -16,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -37,10 +37,10 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
 
   return (
     <>
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled || currentView === 'blog' ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-6'}`}>
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled || currentView === 'blog' || mobileMenuOpen ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-4 md:py-6'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center cursor-pointer group" onClick={() => handleLinkClick(NavLink.HOME)}>
+          <div className="flex items-center cursor-pointer group z-50" onClick={() => handleLinkClick(NavLink.HOME)}>
              <div className="leading-none text-center">
                 <span className="block text-3xl font-display font-bold text-white tracking-wide group-hover:text-brand transition-colors">OASIS</span>
                 <span className="block text-[10px] font-sans font-bold text-brand uppercase tracking-[0.3em] -mt-1 group-hover:text-white transition-colors">Centro de Treinamento</span>
@@ -114,17 +114,17 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-4 z-50">
             {currentUser && (
                <div 
                   onClick={() => setWorkoutsModalOpen(true)}
-                  className="w-8 h-8 rounded-full bg-brand text-slate-900 font-bold flex items-center justify-center text-xs cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-brand text-slate-900 font-bold flex items-center justify-center text-xs cursor-pointer active:scale-90 transition-transform"
                 >
                   {getInitials(currentUser.name)}
                </div>
             )}
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white p-2">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white p-2 focus:outline-none">
+              <svg className="w-8 h-8 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ transform: mobileMenuOpen ? 'rotate(90deg)' : 'none' }}>
                 {mobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -135,60 +135,67 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-slate-900 absolute top-full w-full border-t border-slate-800 shadow-2xl">
-            <div className="flex flex-col p-4 space-y-4">
+        {/* Mobile Menu Overlay */}
+        <div 
+          className={`fixed inset-0 bg-slate-950/95 backdrop-blur-xl transition-all duration-500 ease-in-out md:hidden flex items-center justify-center z-40 ${
+            mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
+          }`}
+        >
+            <div className="flex flex-col p-8 space-y-6 w-full max-w-sm text-center">
               {[
                 { id: NavLink.HOME, label: 'Início' },
                 { id: NavLink.BLOG, label: 'Blog' },
                 { id: NavLink.CLASSES, label: 'Aulas' },
                 { id: NavLink.TRAINER, label: 'Treino Digital' },
                 { id: NavLink.MEMBERSHIP, label: 'Planos' },
-              ].map((link) => (
+              ].map((link, idx) => (
                 <button
                   key={link.id}
                   onClick={() => handleLinkClick(link.id)}
-                  className={`text-left text-lg font-display uppercase tracking-wider ${
-                    (currentView === 'blog' && link.id === NavLink.BLOG) ? 'text-brand' : 'text-slate-300 hover:text-white'
+                  style={{ transitionDelay: `${idx * 50}ms` }}
+                  className={`text-3xl font-display uppercase tracking-widest transition-all duration-300 transform ${
+                     mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                  } ${
+                    (currentView === 'blog' && link.id === NavLink.BLOG) ? 'text-brand' : 'text-slate-300 active:text-white'
                   }`}
                 >
                   {link.label}
                 </button>
               ))}
               
-              {!currentUser ? (
-                <button 
-                  onClick={() => { openAuthModal(); setMobileMenuOpen(false); }}
-                  className="bg-brand text-slate-900 py-3 rounded text-center font-bold uppercase w-full"
-                >
-                  Entrar / Cadastrar
-                </button>
-              ) : (
-                <button 
-                  onClick={() => { logout(); setMobileMenuOpen(false); }}
-                  className="bg-slate-800 text-red-400 py-3 rounded text-center font-bold uppercase w-full border border-slate-700"
-                >
-                  Sair da Conta
-                </button>
-              )}
+              <div className={`pt-8 w-full transition-all duration-500 delay-300 transform ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+                {!currentUser ? (
+                  <button 
+                    onClick={() => { openAuthModal(); setMobileMenuOpen(false); }}
+                    className="bg-brand text-slate-900 py-4 rounded-xl text-center font-bold uppercase w-full shadow-lg active:scale-95 transition-transform"
+                  >
+                    Entrar / Cadastrar
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => { logout(); setMobileMenuOpen(false); }}
+                    className="bg-slate-800 text-red-400 py-4 rounded-xl text-center font-bold uppercase w-full border border-slate-700 active:scale-95 transition-transform"
+                  >
+                    Sair da Conta
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+        </div>
       </nav>
 
       {/* Saved Workouts Modal */}
       {workoutsModalOpen && currentUser && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-           <div className="bg-slate-900 w-full max-w-4xl max-h-[85vh] rounded-2xl border border-slate-700 shadow-2xl flex flex-col">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4 animate-fade-in">
+           <div className="bg-slate-900 w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[85vh] sm:rounded-2xl border-0 sm:border border-slate-700 shadow-2xl flex flex-col">
               <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900 sticky top-0 rounded-t-2xl z-10">
                  <h3 className="text-2xl font-display font-bold text-white uppercase">Meus Treinos Salvos</h3>
-                 <button onClick={() => setWorkoutsModalOpen(false)} className="text-slate-500 hover:text-white">
+                 <button onClick={() => setWorkoutsModalOpen(false)} className="text-slate-500 hover:text-white p-2">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                  </button>
               </div>
               
-              <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+              <div className="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex-1">
                  {currentUser.savedWorkouts.length === 0 ? (
                     <div className="text-center py-20">
                        <div className="bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-600">
@@ -215,9 +222,9 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
                                 </button>
                              </div>
                              
-                             <div className="flex items-baseline gap-4 mb-4">
+                             <div className="flex items-baseline gap-4 mb-4 pr-16">
                                 <h4 className="text-xl font-bold text-white uppercase">{workout.planName}</h4>
-                                <span className="text-brand text-xs font-bold uppercase border border-brand/30 px-2 py-0.5 rounded">{workout.difficulty}</span>
+                                <span className="text-brand text-xs font-bold uppercase border border-brand/30 px-2 py-0.5 rounded whitespace-nowrap">{workout.difficulty}</span>
                              </div>
 
                              <div className="bg-slate-900/50 p-3 rounded mb-4 text-sm text-slate-400">
@@ -227,8 +234,8 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
                              <div className="space-y-2 mb-4">
                                 {workout.exercises.map((ex, i) => (
                                    <div key={i} className="flex justify-between items-center text-sm border-b border-slate-700/50 pb-2 last:border-0 last:pb-0">
-                                      <span className="text-white font-medium"><span className="text-brand mr-2">{i+1}.</span>{ex.name}</span>
-                                      <span className="text-slate-400 text-xs whitespace-nowrap ml-4">{ex.sets} x {ex.reps}</span>
+                                      <span className="text-white font-medium flex-1 mr-2"><span className="text-brand mr-2">{i+1}.</span>{ex.name}</span>
+                                      <span className="text-slate-400 text-xs whitespace-nowrap">{ex.sets} x {ex.reps}</span>
                                    </div>
                                 ))}
                              </div>

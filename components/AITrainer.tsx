@@ -4,11 +4,13 @@ import { generateWorkoutPlan } from '../services/geminiService';
 import { useAdmin } from '../contexts/AdminContext';
 
 const AITrainer: React.FC = () => {
-  const { currentUser, saveWorkout, openAuthModal } = useAdmin();
+  const { currentUser, isAdmin, saveWorkout, openAuthModal, findTemplate, saveTemplate, templateCount } = useAdmin();
   const [loading, setLoading] = useState(false);
   const [workout, setWorkout] = useState<WorkoutPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [templateSavedSuccess, setTemplateSavedSuccess] = useState(false);
+  const [source, setSource] = useState<'bank' | 'ai'>('bank');
   
   const [prefs, setPrefs] = useState<UserPreferences>({
     goal: 'Ganhar Músculo',
@@ -22,16 +24,40 @@ const AITrainer: React.FC = () => {
     setError(null);
     setWorkout(null);
     setSavedSuccess(false);
+    setTemplateSavedSuccess(false);
+    
+    // 1. Try to fetch from Template Bank first (Offline/Production safe)
+    // We add a small artificial delay just to make the UI feel responsive/processed
+    await new Promise(r => setTimeout(r, 800)); 
 
+    const template = findTemplate(prefs);
+    
+    if (template) {
+      setWorkout(template);
+      setSource('bank');
+      setLoading(false);
+      return;
+    }
+
+    // 2. If no template found, try AI (Fallback)
+    // Only admins might strictly need this to populate the bank, 
+    // or if the bank is empty.
     try {
       const plan = await generateWorkoutPlan(prefs);
       if (plan) {
-        setWorkout(plan);
+        // Tag the plan with the parameters so it can be saved as a template later
+        const taggedPlan: WorkoutPlan = {
+            ...plan,
+            targetGoal: prefs.goal,
+            targetLevel: prefs.level
+        };
+        setWorkout(taggedPlan);
+        setSource('ai');
       } else {
-        setError('Não foi possível gerar o plano. Por favor, tente novamente ou verifique sua conexão.');
+        setError('Não foi possível gerar um plano específico neste momento. Tente mudar os parâmetros ou tente novamente mais tarde.');
       }
     } catch (e) {
-      setError('Ocorreu um erro inesperado.');
+      setError('Ocorreu um erro de conexão.');
     } finally {
       setLoading(false);
     }
@@ -50,6 +76,13 @@ const AITrainer: React.FC = () => {
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
+  const handleSaveAsTemplate = () => {
+      if (!workout || !isAdmin) return;
+      saveTemplate(workout);
+      setTemplateSavedSuccess(true);
+      setTimeout(() => setTemplateSavedSuccess(false), 3000);
+  };
+
   return (
     <section id={NavLink.TRAINER} className="py-24 bg-slate-900 relative">
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-brand/5 rounded-full blur-3xl"></div>
@@ -64,6 +97,11 @@ const AITrainer: React.FC = () => {
           <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
             Complemente seu acompanhamento presencial. Obtenha um plano de treino extra instantaneamente, adaptado aos seus objetivos para os dias em que não puder vir ao CT.
           </p>
+          {isAdmin && (
+              <div className="mt-4 inline-block bg-slate-800 px-4 py-2 rounded-lg border border-brand/20">
+                  <p className="text-brand text-xs font-bold uppercase">Painel Admin: {templateCount} Treinos no Banco</p>
+              </div>
+          )}
         </div>
 
         <div className="grid lg:grid-cols-12 gap-12 items-start">
@@ -166,8 +204,10 @@ const AITrainer: React.FC = () => {
                 <div className="bg-slate-800 p-6 rounded-full mb-6 text-slate-500">
                   <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                 </div>
-                <h4 className="text-xl font-bold text-white mb-2">Nenhum Treino Gerado Ainda</h4>
-                <p className="text-slate-400">Configure suas preferências e clique em "Gerar Treino" para que nosso sistema crie sua sessão perfeita.</p>
+                <h4 className="text-xl font-bold text-white mb-2">Pronto para Treinar?</h4>
+                <p className="text-slate-400 max-w-md mx-auto">
+                    Selecione suas preferências ao lado. Nosso sistema buscará o melhor treino para você em nosso banco de dados especializado.
+                </p>
               </div>
             )}
 
@@ -178,7 +218,7 @@ const AITrainer: React.FC = () => {
                     <div className="w-4 h-4 bg-brand rounded-full animate-bounce delay-100"></div>
                     <div className="w-4 h-4 bg-brand rounded-full animate-bounce delay-200"></div>
                  </div>
-                 <p className="text-brand-accent font-mono animate-pulse">Analisando parâmetros...</p>
+                 <p className="text-brand-accent font-mono animate-pulse">Buscando o melhor treino...</p>
                </div>
             )}
 
@@ -189,44 +229,74 @@ const AITrainer: React.FC = () => {
                    <div className="absolute top-0 right-0 p-8 opacity-10">
                       <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 2 7.71 3.43 9.14 2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 22 16.29 20.57 14.86z"/></svg>
                    </div>
-                   <div className="relative z-10 flex flex-col md:flex-row justify-between md:items-start gap-4">
-                     <div>
-                       <div className="flex justify-between items-start mb-4 gap-4">
-                         <h3 className="text-3xl font-display uppercase font-bold tracking-wide text-slate-900">{workout.planName}</h3>
-                         <span className="bg-slate-900/20 px-3 py-1 rounded text-sm font-bold uppercase backdrop-blur-md border border-slate-900/20 text-slate-900 whitespace-nowrap">
-                           {workout.difficulty}
-                         </span>
+                   <div className="relative z-10">
+                       <div className="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-4">
+                           <div>
+                               <div className="flex justify-between items-start mb-2 gap-4">
+                                   <h3 className="text-3xl font-display uppercase font-bold tracking-wide text-slate-900">{workout.planName}</h3>
+                               </div>
+                               <div className="flex flex-wrap gap-2 mb-4">
+                                   <span className="bg-slate-900/20 px-3 py-1 rounded text-sm font-bold uppercase backdrop-blur-md border border-slate-900/20 text-slate-900 whitespace-nowrap">
+                                   {workout.difficulty}
+                                   </span>
+                                   {source === 'ai' && (
+                                       <span className="bg-white/30 px-3 py-1 rounded text-sm font-bold uppercase backdrop-blur-md text-slate-900 whitespace-nowrap">
+                                           Gerado por IA
+                                       </span>
+                                   )}
+                                   {source === 'bank' && (
+                                       <span className="bg-white/30 px-3 py-1 rounded text-sm font-bold uppercase backdrop-blur-md text-slate-900 whitespace-nowrap flex items-center gap-1">
+                                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                           Banco Oasis
+                                       </span>
+                                   )}
+                               </div>
+                           </div>
+                           
+                           {/* Action Buttons */}
+                           <div className="flex flex-col gap-2">
+                               <button 
+                                   onClick={handleSave}
+                                   className={`px-4 py-2 rounded-lg font-bold uppercase text-xs tracking-wider shadow-lg flex items-center justify-center gap-2 transition-all ${
+                                       savedSuccess ? 'bg-green-600 text-white cursor-default' : 'bg-slate-900 text-brand hover:bg-slate-800'
+                                   }`}
+                               >
+                                   {savedSuccess ? (
+                                       <>
+                                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                           Salvo!
+                                       </>
+                                   ) : (
+                                       <>
+                                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+                                           {currentUser ? 'Salvar no Perfil' : 'Entrar para Salvar'}
+                                       </>
+                                   )}
+                               </button>
+
+                               {isAdmin && source === 'ai' && (
+                                   <button 
+                                       onClick={handleSaveAsTemplate}
+                                       className={`px-4 py-2 rounded-lg font-bold uppercase text-xs tracking-wider shadow-lg flex items-center justify-center gap-2 transition-all ${
+                                           templateSavedSuccess ? 'bg-green-600 text-white cursor-default' : 'bg-white/20 text-slate-900 hover:bg-white/40'
+                                       }`}
+                                   >
+                                       {templateSavedSuccess ? 'Salvo no Banco!' : 'Salvar como Modelo'}
+                                   </button>
+                               )}
+                           </div>
                        </div>
-                       <div className="flex gap-6 text-sm font-medium text-slate-800">
+
+                       <div className="flex gap-6 text-sm font-medium text-slate-800 border-t border-slate-900/10 pt-4">
                          <span className="flex items-center gap-2">
                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                            {workout.duration} Min
                          </span>
                           <span className="flex items-center gap-2">
                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
-                           {prefs.goal}
+                           {workout.targetGoal || prefs.goal}
                          </span>
                        </div>
-                     </div>
-                     
-                     <button 
-                        onClick={handleSave}
-                        className={`px-4 py-2 rounded-lg font-bold uppercase text-xs tracking-wider shadow-lg flex items-center gap-2 transition-all ${
-                            savedSuccess ? 'bg-green-600 text-white cursor-default' : 'bg-slate-900 text-brand hover:bg-slate-800'
-                        }`}
-                     >
-                        {savedSuccess ? (
-                             <>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                                Salvo!
-                             </>
-                        ) : (
-                             <>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
-                                {currentUser ? 'Salvar no Perfil' : 'Entrar para Salvar'}
-                             </>
-                        )}
-                     </button>
                    </div>
                 </div>
 

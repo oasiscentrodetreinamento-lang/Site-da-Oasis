@@ -11,6 +11,8 @@ import AuthModal from './components/AuthModal';
 import { AdminProvider } from './contexts/AdminContext';
 import { NavLink } from './types';
 
+// Oasis App Version 1.1
+
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'blog'>('home');
 

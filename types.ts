@@ -13,6 +13,9 @@ export interface WorkoutPlan {
   exercises: Exercise[];
   cooldown: string;
   dateCreated?: string; // New field to track when it was saved
+  // Fields for Template Bank matching
+  targetGoal?: string;
+  targetLevel?: string;
 }
 
 export interface UserPreferences {

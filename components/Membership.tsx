@@ -42,7 +42,14 @@ const Membership: React.FC = () => {
                 Sem fidelidade
               </li>
             </ul>
-            <button className="w-full py-3 border border-slate-600 text-white rounded-lg font-bold uppercase hover:bg-slate-700 hover:text-brand transition-colors">Escolher Mensal</button>
+            <a 
+              href="https://wa.me/553597742332?text=Ol%C3%A1%2C%20gostaria%20de%20contratar%20o%20Plano%20Mensal%20da%20Oasis."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center w-full py-3 border border-slate-600 text-white rounded-lg font-bold uppercase hover:bg-slate-700 hover:text-brand transition-colors"
+            >
+              Escolher Mensal
+            </a>
           </div>
 
           {/* Plano Recorrente */}
@@ -74,7 +81,14 @@ const Membership: React.FC = () => {
                 Renovação Automática
               </li>
             </ul>
-            <button className="w-full py-3 border border-slate-600 text-white rounded-lg font-bold uppercase hover:bg-slate-700 hover:text-brand transition-colors">Escolher Recorrente</button>
+            <a 
+              href="https://wa.me/553597742332?text=Ol%C3%A1%2C%20tenho%20interesse%20no%20Plano%20Recorrente%20da%20Oasis."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center w-full py-3 border border-slate-600 text-white rounded-lg font-bold uppercase hover:bg-slate-700 hover:text-brand transition-colors"
+            >
+              Escolher Recorrente
+            </a>
           </div>
 
           {/* Plano Anual - Highlighted */}
@@ -105,7 +119,14 @@ const Membership: React.FC = () => {
                 Acesso ao Treino Digital
               </li>
             </ul>
-            <button className="w-full py-4 bg-brand hover:bg-brand-dark text-slate-900 rounded-lg font-bold uppercase transition-colors shadow-lg transform hover:scale-[1.02]">Garantir Oferta Anual</button>
+            <a 
+              href="https://wa.me/553597742332?text=Ol%C3%A1%2C%20quero%20aproveitar%20a%20oferta%20do%20Plano%20Anual%20da%20Oasis."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center w-full py-4 bg-brand hover:bg-brand-dark text-slate-900 rounded-lg font-bold uppercase transition-colors shadow-lg transform hover:scale-[1.02]"
+            >
+              Garantir Oferta Anual
+            </a>
           </div>
         </div>
       </div>

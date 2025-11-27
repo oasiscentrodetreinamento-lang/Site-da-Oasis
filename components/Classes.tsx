@@ -113,24 +113,24 @@ const Classes: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState<typeof classes[0] | null>(null);
 
   return (
-    <section id={NavLink.CLASSES} className="py-24 bg-slate-950">
+    <section id={NavLink.CLASSES} className="py-24 bg-slate-950 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16">
           <div>
-            <h2 className="text-brand font-bold uppercase tracking-widest mb-2">Nossas Modalidades</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold text-white uppercase">
+            <h2 className="text-brand font-bold uppercase tracking-widest mb-2 text-sm md:text-base">Nossas Modalidades</h2>
+            <h3 className="text-3xl md:text-5xl font-display font-bold text-white uppercase leading-none">
               Mova-se com <span className="text-white">Energia</span>
             </h3>
           </div>
         </div>
 
         {/* Class Types Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
           {classes.map((cls, idx) => (
             <div 
               key={idx} 
               onClick={() => setSelectedClass(cls)}
-              className="group relative h-96 rounded-xl overflow-hidden cursor-pointer bg-slate-900 border border-slate-800 hover:border-brand transition-all hover:shadow-[0_0_20px_rgba(250,204,21,0.2)]"
+              className="group relative h-80 md:h-96 rounded-2xl overflow-hidden cursor-pointer bg-slate-900 border border-slate-800 hover:border-brand transition-all hover:shadow-[0_0_20px_rgba(250,204,21,0.2)] active:scale-[0.98] duration-300"
             >
               <Editable 
                 id={cls.id} 
@@ -156,23 +156,25 @@ const Classes: React.FC = () => {
           ))}
         </div>
 
-        {/* Schedule Table */}
-        <div className="bg-slate-900 rounded-2xl p-8 border border-slate-800">
-          <div className="text-center mb-10">
-            <h3 className="text-3xl font-display font-bold text-white uppercase">Grade de modalidades</h3>
-            <div className="w-20 h-1 bg-brand mx-auto mt-4 rounded-full"></div>
+        {/* Schedule Section */}
+        <div className="bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-800">
+          <div className="text-center mb-8 md:mb-10">
+            <h3 className="text-2xl md:text-3xl font-display font-bold text-white uppercase">Grade de modalidades</h3>
+            <div className="w-16 md:w-20 h-1 bg-brand mx-auto mt-4 rounded-full"></div>
+            <p className="md:hidden text-brand/60 text-xs mt-2 uppercase tracking-widest animate-pulse">Deslize para ver os dias →</p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {/* Mobile: Horizontal Swipe / Desktop: Grid */}
+          <div className="flex overflow-x-auto pb-6 gap-4 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 md:overflow-visible custom-scrollbar">
             {schedule.map((day, idx) => (
-              <div key={idx} className="bg-slate-950/50 rounded-xl p-6 border border-slate-800/50 hover:border-brand/30 transition-all hover:bg-slate-800/50 flex flex-col h-full">
-                <h4 className="text-brand font-bold uppercase tracking-wider mb-6 pb-2 border-b border-slate-800 text-center">
+              <div key={idx} className="min-w-[85vw] md:min-w-0 snap-center bg-slate-950/50 rounded-xl p-6 border border-slate-800/50 hover:border-brand/30 transition-all hover:bg-slate-800/50 flex flex-col h-full">
+                <h4 className="text-brand font-bold uppercase tracking-wider mb-6 pb-2 border-b border-slate-800 text-center text-lg">
                   {day.day}
                 </h4>
                 <ul className="space-y-4 flex-1">
                   {day.events.map((event, evtIdx) => (
                     <li key={evtIdx} className="flex justify-between items-center group">
-                      <span className="text-slate-400 font-mono text-sm bg-slate-900 px-2 py-1 rounded border border-slate-800 group-hover:text-brand group-hover:border-brand/30 transition-colors">
+                      <span className="text-slate-400 font-mono text-sm bg-slate-900 px-3 py-1 rounded border border-slate-800 group-hover:text-brand group-hover:border-brand/30 transition-colors shadow-sm">
                         {event.time}
                       </span>
                       <span className="text-white font-bold uppercase text-xs tracking-wide text-right">
@@ -184,7 +186,7 @@ const Classes: React.FC = () => {
               </div>
             ))}
           </div>
-          <p className="text-center text-slate-500 text-xs mt-8 italic">
+          <p className="text-center text-slate-500 text-xs mt-4 md:mt-8 italic">
             * A grade de horários está sujeita a alterações. Consulte a recepção.
           </p>
         </div>
@@ -193,22 +195,31 @@ const Classes: React.FC = () => {
       {/* Class Details Modal */}
       {selectedClass && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center sm:p-4 bg-slate-950/90 backdrop-blur-md animate-fade-in"
           onClick={() => setSelectedClass(null)}
         >
           <div 
-            className="bg-slate-900 w-full max-w-4xl max-h-[90vh] rounded-2xl border border-brand/20 shadow-2xl overflow-hidden flex flex-col md:flex-row relative"
+            className="bg-slate-900 w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[90vh] sm:rounded-2xl border-0 sm:border border-brand/20 shadow-2xl overflow-hidden flex flex-col md:flex-row relative"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Mobile Close Button (Top Right) */}
+             <button 
+              onClick={() => setSelectedClass(null)}
+              className="absolute top-4 right-4 z-20 bg-black/60 text-white p-2 rounded-full backdrop-blur-md md:hidden"
+            >
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+
+            {/* Desktop Close Button */}
             <button 
               onClick={() => setSelectedClass(null)}
-              className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-brand hover:text-slate-900 text-white p-2 rounded-full transition-colors"
+              className="hidden md:block absolute top-4 right-4 z-20 bg-black/50 hover:bg-brand hover:text-slate-900 text-white p-2 rounded-full transition-colors"
             >
                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
 
             {/* Image Side */}
-            <div className="md:w-2/5 h-64 md:h-auto relative">
+            <div className="h-64 md:w-2/5 md:h-auto relative shrink-0">
                <Editable 
                   id={selectedClass.id} 
                   type="image" 
@@ -216,13 +227,13 @@ const Classes: React.FC = () => {
                   className="w-full h-full object-cover"
                />
                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent md:bg-gradient-to-r"></div>
-               <div className="absolute bottom-4 left-4 md:hidden">
-                  <h3 className="text-3xl font-display font-bold text-white uppercase">{selectedClass.title}</h3>
+               <div className="absolute bottom-4 left-4 md:hidden pr-4">
+                  <h3 className="text-4xl font-display font-bold text-white uppercase leading-none drop-shadow-lg">{selectedClass.title}</h3>
                </div>
             </div>
 
             {/* Content Side */}
-            <div className="md:w-3/5 p-8 overflow-y-auto custom-scrollbar">
+            <div className="flex-1 p-6 md:p-8 overflow-y-auto custom-scrollbar bg-slate-900">
                <h3 className="hidden md:block text-4xl font-display font-bold text-white uppercase mb-4 text-brand-gradient">
                  {selectedClass.title}
                </h3>
@@ -232,12 +243,12 @@ const Classes: React.FC = () => {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     Sobre a Atividade
                  </h4>
-                 <p className="text-slate-300 leading-relaxed text-lg">
+                 <p className="text-slate-300 leading-relaxed text-base md:text-lg">
                     {selectedClass.details}
                  </p>
                </div>
 
-               <div>
+               <div className="mb-20 md:mb-0">
                  <h4 className="text-brand font-bold uppercase tracking-wider text-sm mb-4 flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     Recomendado Para
@@ -246,16 +257,17 @@ const Classes: React.FC = () => {
                     {selectedClass.recommendedFor.map((rec, i) => (
                       <li key={i} className="flex items-start gap-3 bg-slate-800/50 p-3 rounded-lg border border-slate-800">
                          <div className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0"></div>
-                         <span className="text-slate-200">{rec}</span>
+                         <span className="text-slate-200 text-sm md:text-base">{rec}</span>
                       </li>
                     ))}
                  </ul>
                </div>
 
-               <div className="mt-8 pt-6 border-t border-slate-800">
+               {/* Mobile Sticky CTA */}
+               <div className="absolute bottom-0 left-0 w-full p-4 bg-slate-900 border-t border-slate-800 md:relative md:p-0 md:mt-8 md:border-0 md:bg-transparent">
                   <button 
                     onClick={() => { setSelectedClass(null); document.getElementById('membership')?.scrollIntoView({ behavior: 'smooth' }); }}
-                    className="w-full bg-brand hover:bg-brand-dark text-slate-900 font-bold py-3 rounded-lg uppercase tracking-wider transition-colors"
+                    className="w-full bg-brand hover:bg-brand-dark text-slate-900 font-bold py-4 md:py-3 rounded-xl uppercase tracking-wider transition-colors shadow-lg active:scale-[0.98]"
                   >
                      Começar a Treinar
                   </button>

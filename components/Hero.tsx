@@ -4,7 +4,7 @@ import Editable from './Editable';
 
 const Hero: React.FC = () => {
   return (
-    <section id={NavLink.HOME} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+    <section id={NavLink.HOME} className="relative min-h-[100dvh] w-full overflow-hidden flex items-center justify-center">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <Editable 
@@ -18,16 +18,16 @@ const Hero: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
-        <h2 className="text-brand font-bold uppercase tracking-[0.2em] mb-4 animate-fade-in-up">Bem-vindo à Oasis</h2>
-        <h1 className="text-5xl md:text-8xl font-display font-bold text-white mb-6 leading-tight uppercase animate-fade-in-up delay-100">
+      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-0 md:mt-16 flex flex-col items-center">
+        <h2 className="text-brand font-bold uppercase tracking-[0.2em] mb-3 md:mb-4 animate-fade-in-up text-sm md:text-base">Bem-vindo à Oasis</h2>
+        <h1 className="text-6xl sm:text-7xl md:text-8xl font-display font-bold text-white mb-6 leading-[0.9] uppercase animate-fade-in-up delay-100">
           <Editable 
              id="hero-title" 
              defaultContent={'Centro de \nTreinamento'} 
              className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-brand-accent block"
           />
         </h1>
-        <div className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto font-light leading-relaxed animate-fade-in-up delay-200">
+        <div className="text-base md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto font-light leading-relaxed animate-fade-in-up delay-200 px-2">
            <Editable 
              id="hero-subtitle" 
              type="textarea"
@@ -35,14 +35,17 @@ const Hero: React.FC = () => {
            />
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-300">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center animate-fade-in-up delay-300 px-4">
           <button 
             onClick={() => document.getElementById(NavLink.MEMBERSHIP)?.scrollIntoView({behavior: 'smooth'})}
-            className="bg-brand hover:bg-brand-dark text-slate-900 px-8 py-4 rounded-full font-bold uppercase tracking-widest transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
+            className="w-full sm:w-auto bg-brand hover:bg-brand-dark text-slate-900 px-8 py-4 rounded-full font-bold uppercase tracking-widest transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.5)] active:scale-95"
           >
             Ver Nossos Planos
           </button>
-          <button onClick={() => document.getElementById(NavLink.TRAINER)?.scrollIntoView({behavior: 'smooth'})} className="bg-transparent border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest transition-all backdrop-blur-sm">
+          <button 
+             onClick={() => document.getElementById(NavLink.TRAINER)?.scrollIntoView({behavior: 'smooth'})} 
+             className="w-full sm:w-auto bg-slate-800/50 border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest transition-all backdrop-blur-sm active:scale-95"
+          >
             Gerar Treino Online
           </button>
         </div>
