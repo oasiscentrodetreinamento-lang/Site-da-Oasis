@@ -7,6 +7,7 @@ import Membership from './components/Membership';
 import Footer from './components/Footer';
 import ComingSoon from './components/ComingSoon';
 import Blog from './components/Blog';
+import Amenities from './components/Amenities';
 import AuthModal from './components/AuthModal';
 import { AdminProvider } from './contexts/AdminContext';
 import { NavLink } from './types';
@@ -49,6 +50,7 @@ function App() {
               <Hero />
               <ComingSoon />
               <Classes />
+              <Amenities />
               <AITrainer />
               <Membership />
             </>
