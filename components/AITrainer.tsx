@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { NavLink, UserPreferences, WorkoutPlan } from '../types';
 import { generateWorkoutPlan } from '../services/geminiService';
@@ -49,7 +50,8 @@ const AITrainer: React.FC = () => {
         const taggedPlan: WorkoutPlan = {
             ...plan,
             targetGoal: prefs.goal,
-            targetLevel: prefs.level
+            targetLevel: prefs.level,
+            targetEquipment: prefs.equipment
         };
         setWorkout(taggedPlan);
         setSource('ai');

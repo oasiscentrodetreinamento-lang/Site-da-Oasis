@@ -1,3 +1,4 @@
+
 export interface Exercise {
   name: string;
   sets: string;
@@ -16,6 +17,7 @@ export interface WorkoutPlan {
   // Fields for Template Bank matching
   targetGoal?: string;
   targetLevel?: string;
+  targetEquipment?: string;
 }
 
 export interface UserPreferences {

@@ -58,193 +58,300 @@ const defaultContent: Record<string, string> = {
   'news-list-dance': '• Ballet Clássico\n• Jazz\n• Danças Urbanas\n• Fit Dance',
 };
 
-// Initial Database of Workouts (Fallback for offline/production)
+// --- INITIAL TEMPLATE DATABASE ---
+// This ensures that EVERY combination of Equipment + Goal has at least one valid workout.
+// Mapped to:
+// Goals: 'Ganhar Músculo', 'Perder Peso', 'Melhorar Resistência', 'Treino de Força', 'Mobilidade e Flexibilidade'
+// Levels: 'Iniciante', 'Intermediário', 'Avançado'
+// Equipment: 'Academia Completa', 'Apenas Halteres', 'Apenas Peso do Corpo', 'Academia em Casa (Básica)'
+
 const defaultTemplates: WorkoutPlan[] = [
-  // --- INICIANTE ---
+  // =========================================================================
+  // 1. ACADEMIA COMPLETA (Full Gym)
+  // =========================================================================
   {
-    planName: "Adaptação Full Body",
-    difficulty: "Iniciante",
-    targetGoal: "Ganhar Músculo",
-    targetLevel: "Iniciante",
-    duration: "45",
-    warmup: "5 min esteira leve + 10 rotações de ombros e braços.",
-    exercises: [
-      { name: "Agachamento Livre (no banco)", sets: "3", reps: "12-15", notes: "Sente e levante controlando." },
-      { name: "Flexão de Braços (joelhos no chão)", sets: "3", reps: "8-12", notes: "Contraia o abdômen." },
-      { name: "Puxada Alta (Máquina)", sets: "3", reps: "12", notes: "Traga a barra até o peito." },
-      { name: "Desenvolvimento Halteres", sets: "3", reps: "10-12", notes: "Sentado, costas apoiadas." },
-      { name: "Abdominal Supra", sets: "3", reps: "15-20", notes: "Tire apenas as escápulas do chão." }
-    ],
-    cooldown: "Alongamento estático de pernas e peitoral (30s cada)."
-  },
-  {
-    planName: "Queima de Gordura Express",
-    difficulty: "Iniciante",
-    targetGoal: "Perder Peso",
-    targetLevel: "Iniciante",
-    duration: "30",
-    warmup: "3 min polichinelos e corrida estacionária.",
-    exercises: [
-      { name: "Agachamento com Salto (ou rápido)", sets: "3", reps: "15", notes: "Explosão na subida." },
-      { name: "Flexão de Braços Inclinada (mãos no banco)", sets: "3", reps: "10", notes: "Corpo reto." },
-      { name: "Mountain Climbers (Escalador)", sets: "3", reps: "30s", notes: "Ritmo moderado." },
-      { name: "Passada (Lunge) Alternada", sets: "3", reps: "10 cada", notes: "Mãos na cintura." },
-      { name: "Prancha Abdominal", sets: "3", reps: "20-30s", notes: "Umbigo nas costas." }
-    ],
-    cooldown: "Respiração profunda e alongamento leve."
-  },
-
-  // --- INTERMEDIÁRIO ---
-  {
-    planName: "Hipertrofia Total Body",
+    planName: "Hipertrofia Clássica (ABC)",
     difficulty: "Intermediário",
     targetGoal: "Ganhar Músculo",
     targetLevel: "Intermediário",
+    targetEquipment: "Academia Completa",
     duration: "60",
-    warmup: "5 min bike carga média + mobilidade de quadril.",
+    warmup: "5 min bike + manguito rotador.",
     exercises: [
-      { name: "Agachamento Livre com Barra", sets: "4", reps: "8-10", notes: "Amplitude máxima segura." },
-      { name: "Supino Reto com Barra/Halter", sets: "4", reps: "8-10", notes: "Controle a descida (3seg)." },
-      { name: "Levantamento Terra Romeno (Stiff)", sets: "3", reps: "10-12", notes: "Coluna neutra sempre." },
-      { name: "Remada Curvada", sets: "4", reps: "10", notes: "Tronco paralelo ao chão." },
-      { name: "Elevação Lateral + Frontal (Bi-set)", sets: "3", reps: "12+12", notes: "Sem descanso entre exercícios." }
+      { name: "Supino Reto com Barra", sets: "4", reps: "8-10", notes: "Carga progressiva." },
+      { name: "Puxada Alta (Polia)", sets: "4", reps: "10-12", notes: "Foco na largura das costas." },
+      { name: "Leg Press 45", sets: "4", reps: "12", notes: "Amplitude completa." },
+      { name: "Desenvolvimento Máquina", sets: "3", reps: "10-12", notes: "Ombros." },
+      { name: "Tríceps Corda + Rosca Direta", sets: "3", reps: "12+12", notes: "Bi-set braços." }
     ],
-    cooldown: "5 min caminhada leve + alongamento geral."
+    cooldown: "Alongamento geral 5 min."
   },
   {
-    planName: "Cardio HIIT Queima Total",
-    difficulty: "Intermediário",
-    targetGoal: "Perder Peso",
-    targetLevel: "Intermediário",
-    duration: "30",
-    warmup: "5 min corrida estacionária e polichinelos.",
-    exercises: [
-      { name: "Corrida Estacionária Joelho Alto", sets: "4", reps: "45s", notes: "Intensidade máxima." },
-      { name: "Sprawl (Meio Burpee)", sets: "4", reps: "15", notes: "Rápido transição chão-pé." },
-      { name: "Abdominal Remador", sets: "4", reps: "20", notes: "Estenda todo o corpo." },
-      { name: "Agachamento Isométrico", sets: "4", reps: "45s", notes: "Segura firme na parede ou livre." },
-      { name: "Polichinelo", sets: "4", reps: "60s", notes: "Ritmo constante." }
-    ],
-    cooldown: "Caminhada lenta e respiração profunda."
-  },
-  {
-    planName: "Superiores com Foco em Braços",
-    difficulty: "Intermediário",
-    targetGoal: "Ganhar Músculo",
-    targetLevel: "Intermediário",
-    duration: "50",
-    warmup: "Rotação de ombros + Flexão de braço leve.",
-    exercises: [
-      { name: "Supino Inclinado Halteres", sets: "4", reps: "10-12", notes: "Foco parte superior peitoral." },
-      { name: "Puxada Aberta (Polia)", sets: "4", reps: "10-12", notes: "Esmague as costas no final." },
-      { name: "Tríceps Testa + Supinado (Bi-set)", sets: "3", reps: "10+10", notes: "Queima total tríceps." },
-      { name: "Rosca Direta Barra W", sets: "3", reps: "10-12", notes: "Cotovelos colados no corpo." },
-      { name: "Desenvolvimento Arnold", sets: "3", reps: "12", notes: "Giro completo do punho." }
-    ],
-    cooldown: "Alongamento de tríceps e bíceps."
-  },
-
-  // --- AVANÇADO (Novas Variações) ---
-  {
-    planName: "Leg Day - Volume Alto",
-    difficulty: "Avançado",
-    targetGoal: "Ganhar Músculo",
-    targetLevel: "Avançado",
-    duration: "75",
-    warmup: "Agachamento peso do corpo (2x20) + Mobilidade de tornozelo.",
-    exercises: [
-      { name: "Agachamento Livre", sets: "5", reps: "6-8", notes: "Carga alta. Descanso 2-3min." },
-      { name: "Leg Press 45º", sets: "4", reps: "12-15", notes: "Pés baixos na plataforma (foco quadríceps)." },
-      { name: "Afundo Búlgaro (com halteres)", sets: "3", reps: "10 cada", notes: "Incline o tronco levemente à frente." },
-      { name: "Cadeira Extensora (Drop-set)", sets: "3", reps: "10+10+10", notes: "Reduza o peso 2x sem descanso." },
-      { name: "Mesa Flexora", sets: "4", reps: "12", notes: "Segure 1s na contração máxima." },
-      { name: "Panturrilha em Pé", sets: "5", reps: "15-20", notes: "Amplitude total." }
-    ],
-    cooldown: "Alongamento passivo de quadríceps e posteriores."
-  },
-  {
-    planName: "Peito e Tríceps - Força & Pump",
-    difficulty: "Avançado",
-    targetGoal: "Ganhar Músculo",
-    targetLevel: "Avançado",
-    duration: "60",
-    warmup: "Manguito rotador no elástico + Flexões explosivas.",
-    exercises: [
-      { name: "Supino Reto Barra", sets: "5", reps: "5", notes: "Foco em força bruta (85% RM)." },
-      { name: "Supino Inclinado Halteres", sets: "4", reps: "8-10", notes: "Amplitude máxima." },
-      { name: "Crossover (Polia Alta)", sets: "4", reps: "15", notes: "Foco na contração de pico." },
-      { name: "Tríceps Paralelas (com peso)", sets: "4", reps: "8-10", notes: "Tronco ereto para focar tríceps." },
-      { name: "Tríceps Corda", sets: "3", reps: "15-20", notes: "Fadiga final." }
-    ],
-    cooldown: "Alongamento peitoral na parede."
-  },
-  {
-    planName: "Dorsais e Bíceps - Construção em V",
-    difficulty: "Avançado",
-    targetGoal: "Ganhar Músculo",
-    targetLevel: "Avançado",
-    duration: "60",
-    warmup: "Remada TRX ou Barra Australiana 2x15.",
-    exercises: [
-      { name: "Barra Fixa (Pull-ups)", sets: "4", reps: "Até a falha", notes: "Use peso extra se fizer +12." },
-      { name: "Remada Curvada Supinada", sets: "4", reps: "8-10", notes: "Foco na espessura das costas." },
-      { name: "Puxada Triângulo", sets: "3", reps: "12", notes: "Traga no peito." },
-      { name: "Pulldown (Polia Alta)", sets: "3", reps: "15", notes: "Braços estendidos (foco latíssimo)." },
-      { name: "Rosca Scott (Máquina ou Livre)", sets: "4", reps: "10", notes: "Isolamento total." },
-      { name: "Rosca Martelo Alternada", sets: "3", reps: "12", notes: "Foco no braquial." }
-    ],
-    cooldown: "Pendurar na barra fixa (30s) para alongar dorsais."
-  },
-  {
-    planName: "Metabólico Insano (WOD)",
-    difficulty: "Avançado",
-    targetGoal: "Perder Peso",
-    targetLevel: "Avançado",
-    duration: "45",
-    warmup: "5 min corda + mobilidade articular.",
-    exercises: [
-      { name: "Burpees", sets: "5", reps: "15", notes: "Peito no chão. O mais rápido possível." },
-      { name: "Thrusters (Agachamento + Desenvolvimento)", sets: "5", reps: "12", notes: "Use o impulso das pernas." },
-      { name: "Kettlebell Swing", sets: "5", reps: "20", notes: "Quadril explosivo. Altura dos olhos." },
-      { name: "Box Jump (Salto na Caixa)", sets: "5", reps: "12", notes: "Estenda o quadril no topo." },
-      { name: "Prancha Dinâmica (Sobe e Desce)", sets: "4", reps: "45s", notes: "Variando apoios cotovelo/mão." }
-    ],
-    cooldown: "Caminhada lenta até baixar FC + Alongamento."
-  },
-  {
-    planName: "Calistenia Pro (Peso do Corpo)",
+    planName: "Força Bruta 5x5",
     difficulty: "Avançado",
     targetGoal: "Treino de Força",
     targetLevel: "Avançado",
-    duration: "55",
-    warmup: "Polichinelos, rotação de punhos e ombros.",
+    targetEquipment: "Academia Completa",
+    duration: "70",
+    warmup: "Aquecimento específico com cargas leves.",
     exercises: [
-      { name: "Pistol Squat (Agachamento Unilateral)", sets: "4", reps: "5-8 cada", notes: "Use apoio se necessário." },
-      { name: "Flexão Arqueira (Archer Pushup)", sets: "4", reps: "8-10 cada", notes: "Braço de apoio esticado." },
-      { name: "Barra Fixa Estrita", sets: "5", reps: "8-12", notes: "Sem balanço (kipping)." },
-      { name: "Dips (Paralelas) em Barra Reta ou Argola", sets: "4", reps: "10-15", notes: "Controle a instabilidade." },
-      { name: "L-Sit (Isometria)", sets: "4", reps: "15-30s", notes: "Pernas esticadas, corpo suspenso." }
+      { name: "Agachamento Livre", sets: "5", reps: "5", notes: "Carga alta (80% RM)." },
+      { name: "Supino Reto", sets: "5", reps: "5", notes: "Descanso de 2-3 min." },
+      { name: "Levantamento Terra", sets: "3", reps: "3-5", notes: "Técnica perfeita." },
+      { name: "Desenvolvimento Militar", sets: "4", reps: "6", notes: "Em pé com barra." },
+      { name: "Remada Curvada", sets: "4", reps: "6", notes: "Explosão na subida." }
     ],
-    cooldown: "Alongamento profundo de ombros e posteriores."
+    cooldown: "Alongamento passivo."
   },
-  
-  // --- MOBILIDADE / FLEXIBILIDADE (Todos os Níveis) ---
   {
-    planName: "Mobilidade e Core Flow",
+    planName: "Queima Calórica (Máquinas)",
+    difficulty: "Iniciante",
+    targetGoal: "Perder Peso",
+    targetLevel: "Iniciante",
+    targetEquipment: "Academia Completa",
+    duration: "45",
+    warmup: "10 min esteira inclinação média.",
+    exercises: [
+      { name: "Leg Press Horizontal", sets: "3", reps: "15", notes: "Ritmo constante." },
+      { name: "Supino Vertical (Máquina)", sets: "3", reps: "15", notes: "Pouco descanso." },
+      { name: "Remada Sentada", sets: "3", reps: "15", notes: "Postura ereta." },
+      { name: "Cadeira Extensora", sets: "3", reps: "15-20", notes: "Queimação muscular." },
+      { name: "Abdominal Máquina", sets: "3", reps: "20", notes: "Foco no core." }
+    ],
+    cooldown: "5 min bike leve."
+  },
+  {
+    planName: "Resistência Muscular Total",
+    difficulty: "Intermediário",
+    targetGoal: "Melhorar Resistência",
+    targetLevel: "Intermediário",
+    targetEquipment: "Academia Completa",
+    duration: "50",
+    warmup: "5 min elíptico.",
+    exercises: [
+      { name: "Agachamento Hack", sets: "3", reps: "20", notes: "Séries longas." },
+      { name: "Cadeira Flexora", sets: "3", reps: "20", notes: "Controle o retorno." },
+      { name: "Peck Deck (Voador)", sets: "3", reps: "20", notes: "Isolamento peitoral." },
+      { name: "Elevação Lateral Halteres", sets: "3", reps: "15-20", notes: "Queimação ombros." },
+      { name: "Prancha Abdominal", sets: "3", reps: "1 min", notes: "Isometria." }
+    ],
+    cooldown: "Alongamento de membros inferiores."
+  },
+
+  // =========================================================================
+  // 2. APENAS HALTERES (Dumbbells Only)
+  // =========================================================================
+  {
+    planName: "Full Body com Halteres",
+    difficulty: "Iniciante",
+    targetGoal: "Ganhar Músculo",
+    targetLevel: "Iniciante",
+    targetEquipment: "Apenas Halteres",
+    duration: "45",
+    warmup: "Polichinelos + Rotação de braços.",
+    exercises: [
+      { name: "Goblet Squat (Agachamento)", sets: "3", reps: "12", notes: "Segure o halter no peito." },
+      { name: "Supino Reto com Halteres (Chão/Banco)", sets: "3", reps: "12", notes: "Empurre para cima." },
+      { name: "Remada Unilateral (Serrote)", sets: "3", reps: "10 cada", notes: "Apoie em algo firme." },
+      { name: "Desenvolvimento Arnold", sets: "3", reps: "10", notes: "Gire os punhos." },
+      { name: "Stiff com Halteres", sets: "3", reps: "12", notes: "Coluna reta, desça até o joelho." }
+    ],
+    cooldown: "Alongamento leve."
+  },
+  {
+    planName: "Metabólico Halteres HIIT",
+    difficulty: "Intermediário",
+    targetGoal: "Perder Peso",
+    targetLevel: "Intermediário",
+    targetEquipment: "Apenas Halteres",
+    duration: "30",
+    warmup: "Corrida estacionária 3 min.",
+    exercises: [
+      { name: "Thrusters (Agachamento + Press)", sets: "4", reps: "15", notes: "Movimento contínuo." },
+      { name: "Renegade Row (Remada em Prancha)", sets: "4", reps: "10 cada", notes: "Core firme." },
+      { name: "Passada (Lunge) Dinâmica", sets: "4", reps: "20 total", notes: "Alternando pernas." },
+      { name: "Swing com Halter", sets: "4", reps: "20", notes: "Use o quadril." },
+      { name: "Abdominal com Carga", sets: "4", reps: "15", notes: "Segure halter no peito." }
+    ],
+    cooldown: "Respiração profunda."
+  },
+  {
+    planName: "Força Funcional DB",
+    difficulty: "Avançado",
+    targetGoal: "Treino de Força",
+    targetLevel: "Avançado",
+    targetEquipment: "Apenas Halteres",
+    duration: "55",
+    warmup: "Mobilidade de ombros e quadril.",
+    exercises: [
+      { name: "Agachamento Búlgaro", sets: "4", reps: "6-8", notes: "Carga alta, uma perna por vez." },
+      { name: "Supino Halteres Unilateral", sets: "4", reps: "8", notes: "Ativação do core." },
+      { name: "Remada Curvada Dupla", sets: "4", reps: "8-10", notes: "Tronco paralelo ao chão." },
+      { name: "Levantamento Terra Romeno", sets: "4", reps: "8-10", notes: "Foco posterior." },
+      { name: "Farmer's Walk (Caminhada Fazendeiro)", sets: "3", reps: "40s", notes: "Carga máxima nas mãos." }
+    ],
+    cooldown: "Alongamento passivo."
+  },
+  {
+    planName: "Mobilidade com Carga",
     difficulty: "Iniciante",
     targetGoal: "Mobilidade e Flexibilidade",
     targetLevel: "Iniciante",
+    targetEquipment: "Apenas Halteres",
     duration: "30",
-    warmup: "Respiração diafragmática 2 min.",
+    warmup: "Rotações articulares.",
     exercises: [
-      { name: "Gato e Vaca (Cat-Cow)", sets: "3", reps: "10 ciclos", notes: "Mobilidade de coluna." },
-      { name: "Cachorro Olhando para Baixo", sets: "3", reps: "30s", notes: "Alongar cadeia posterior." },
-      { name: "World's Greatest Stretch", sets: "3", reps: "5 cada lado", notes: "Passada longa com rotação torácica." },
-      { name: "Deadbug (Inseto Morto)", sets: "3", reps: "12 total", notes: "Controle do core, lombar no chão." },
-      { name: "Bird-Dog (Perdigueiro)", sets: "3", reps: "12 total", notes: "Estabilidade cruzada." },
-      { name: "Posição de Criança (Child's Pose)", sets: "1", reps: "2 min", notes: "Relaxamento final." }
+      { name: "Agachamento Cosmo (Cossack)", sets: "3", reps: "8 cada", notes: "Use halter leve para contrapeso." },
+      { name: "Jefferson Curl (leve)", sets: "3", reps: "10", notes: "Desenrole a coluna devagar." },
+      { name: "Halo (Giro ao redor da cabeça)", sets: "3", reps: "10 cada", notes: "Mobilidade de ombros." },
+      { name: "Good Morning com Halter", sets: "3", reps: "12", notes: "Halter no peito, flexione quadril." },
+      { name: "Windmill (Moinho)", sets: "3", reps: "5 cada", notes: "Olhe para o halter." }
     ],
-    cooldown: "Meditação rápida."
+    cooldown: "Relaxamento."
+  },
+
+  // =========================================================================
+  // 3. APENAS PESO DO CORPO (Bodyweight / Calistenia)
+  // =========================================================================
+  {
+    planName: "Calistenia Fundamentos",
+    difficulty: "Iniciante",
+    targetGoal: "Ganhar Músculo",
+    targetLevel: "Iniciante",
+    targetEquipment: "Apenas Peso do Corpo",
+    duration: "40",
+    warmup: "Polichinelos e agachamentos livres.",
+    exercises: [
+      { name: "Agachamento Livre", sets: "3", reps: "15", notes: "Desça devagar." },
+      { name: "Flexão de Braços (pode usar joelho)", sets: "3", reps: "8-12", notes: "Peito no chão." },
+      { name: "Afundo Estático", sets: "3", reps: "10 cada", notes: "Mãos na cintura." },
+      { name: "Prancha Abdominal", sets: "3", reps: "30s", notes: "Corpo reto." },
+      { name: "Superman (Dorsal)", sets: "3", reps: "15", notes: "Tire peito e coxas do chão." }
+    ],
+    cooldown: "Alongamento completo."
+  },
+  {
+    planName: "Queima de Gordura em Casa",
+    difficulty: "Intermediário",
+    targetGoal: "Perder Peso",
+    targetLevel: "Intermediário",
+    targetEquipment: "Apenas Peso do Corpo",
+    duration: "25",
+    warmup: "Corrida no lugar.",
+    exercises: [
+      { name: "Burpees", sets: "4", reps: "10-12", notes: "Completo." },
+      { name: "Mountain Climbers", sets: "4", reps: "40s", notes: "Acelerado." },
+      { name: "Agachamento com Salto", sets: "4", reps: "15", notes: "Amortecer a queda." },
+      { name: "Flexão Toca Ombro", sets: "4", reps: "12 total", notes: "Estabilidade." },
+      { name: "Polichinelo", sets: "4", reps: "1 min", notes: "Sem parar." }
+    ],
+    cooldown: "Caminhada lenta."
+  },
+  {
+    planName: "Calistenia Avançada (Força)",
+    difficulty: "Avançado",
+    targetGoal: "Treino de Força",
+    targetLevel: "Avançado",
+    targetEquipment: "Apenas Peso do Corpo",
+    duration: "60",
+    warmup: "Aquecimento de punhos e ombros.",
+    exercises: [
+      { name: "Pistol Squat (Agachamento 1 perna)", sets: "4", reps: "5-8", notes: "Use apoio se precisar." },
+      { name: "Flexão Diamante", sets: "4", reps: "10-15", notes: "Mãos unidas (tríceps)." },
+      { name: "Barra Fixa (Se tiver) ou Flexão Pike", sets: "4", reps: "8-12", notes: "Pike: Quadril alto, topo da cabeça no chão." },
+      { name: "L-Sit (Isometria)", sets: "4", reps: "15s+", notes: "Pernas esticadas." },
+      { name: "Plyo Pushups (Flexão com palma)", sets: "3", reps: "8", notes: "Explosão." }
+    ],
+    cooldown: "Alongamento passivo."
+  },
+  {
+    planName: "Flow de Mobilidade Natural",
+    difficulty: "Iniciante",
+    targetGoal: "Mobilidade e Flexibilidade",
+    targetLevel: "Iniciante",
+    targetEquipment: "Apenas Peso do Corpo",
+    duration: "30",
+    warmup: "Respiração.",
+    exercises: [
+      { name: "Cachorro Olhando Baixo", sets: "3", reps: "30s", notes: "Alongar posterior." },
+      { name: "Deep Squat Hold (Cócoras)", sets: "3", reps: "30-60s", notes: "Calcanhar no chão." },
+      { name: "Escorpião", sets: "3", reps: "10 total", notes: "Rotação de tronco deitado." },
+      { name: "Gato e Vaca", sets: "3", reps: "10", notes: "Coluna." },
+      { name: "Pidgeon Pose (Pombo)", sets: "2", reps: "45s cada", notes: "Glúteos." }
+    ],
+    cooldown: "Meditação."
+  },
+
+  // =========================================================================
+  // 4. ACADEMIA EM CASA (Básica - Halteres + Elásticos + Peso do Corpo)
+  // =========================================================================
+  {
+    planName: "Home Gym Full Body",
+    difficulty: "Intermediário",
+    targetGoal: "Ganhar Músculo",
+    targetLevel: "Intermediário",
+    targetEquipment: "Academia em Casa (Básica)",
+    duration: "50",
+    warmup: "Polichinelos + Mobilidade.",
+    exercises: [
+      { name: "Agachamento com Halteres", sets: "4", reps: "12", notes: "Halteres nos ombros ou ao lado." },
+      { name: "Flexão de Braços (ou Supino Chão)", sets: "4", reps: "12-15", notes: "Peitoral." },
+      { name: "Remada Curvada (Halter ou Elástico)", sets: "4", reps: "12", notes: "Costas." },
+      { name: "Elevação Lateral (Halter/Elástico)", sets: "3", reps: "15", notes: "Ombros." },
+      { name: "Rosca Direta + Tríceps Francês", sets: "3", reps: "12+12", notes: "Braços." }
+    ],
+    cooldown: "Alongamento."
+  },
+  {
+    planName: "Queima Total Home Gym",
+    difficulty: "Avançado",
+    targetGoal: "Perder Peso",
+    targetLevel: "Avançado",
+    targetEquipment: "Academia em Casa (Básica)",
+    duration: "40",
+    warmup: "Corda (simulada) 3 min.",
+    exercises: [
+      { name: "Devil Press (Burpee com Halter)", sets: "4", reps: "10", notes: "Intenso." },
+      { name: "Agachamento + Desenvolvimento (Thruster)", sets: "4", reps: "15", notes: "Movimento único." },
+      { name: "Remada Renegada", sets: "4", reps: "12 total", notes: "Prancha com remada." },
+      { name: "Abdominal V-Up", sets: "4", reps: "15", notes: "Mãos nos pés." },
+      { name: "Box Jump (ou Salto no Degrau)", sets: "4", reps: "15", notes: "Explosão." }
+    ],
+    cooldown: "Caminhada leve."
+  },
+  {
+    planName: "Resistência com Elásticos",
+    difficulty: "Iniciante",
+    targetGoal: "Melhorar Resistência",
+    targetLevel: "Iniciante",
+    targetEquipment: "Academia em Casa (Básica)",
+    duration: "35",
+    warmup: "Giro de braços e agachamento livre.",
+    exercises: [
+      { name: "Remada em Pé com Elástico", sets: "3", reps: "20", notes: "Pise no elástico e puxe." },
+      { name: "Supino em Pé com Elástico", sets: "3", reps: "20", notes: "Elástico nas costas." },
+      { name: "Agachamento segurando Elástico", sets: "3", reps: "20", notes: "Resistência na subida." },
+      { name: "Rosca Bíceps Elástico", sets: "3", reps: "20", notes: "Alta repetição." },
+      { name: "Tríceps Testa Elástico", sets: "3", reps: "20", notes: "Prenda o elástico alto." }
+    ],
+    cooldown: "Alongamento."
+  },
+  {
+    planName: "Força Adaptada Home",
+    difficulty: "Avançado",
+    targetGoal: "Treino de Força",
+    targetLevel: "Avançado",
+    targetEquipment: "Academia em Casa (Básica)",
+    duration: "50",
+    warmup: "Mobilidade completa.",
+    exercises: [
+      { name: "Agachamento Unilateral (Pistol ou Búlgaro)", sets: "5", reps: "6-8", notes: "Com halter se possível." },
+      { name: "Flexão de Braço c/ Pés Elevados", sets: "4", reps: "8-12", notes: "Foco peitoral superior/ombros." },
+      { name: "Remada Unilateral Pesada", sets: "4", reps: "8-10", notes: "Halter." },
+      { name: "Stiff Unilateral", sets: "4", reps: "8-10", notes: "Equilíbrio e força." },
+      { name: "Prancha com Peso (Halter nas costas)", sets: "3", reps: "45s", notes: "Cuidado ao colocar." }
+    ],
+    cooldown: "Alongamento."
   }
 ];
 
@@ -291,16 +398,22 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       setBlogPosts(parsedPosts);
     }
     
-    const savedTemplates = localStorage.getItem('workoutTemplates');
-    if (savedTemplates) {
-       const parsedTemplates = JSON.parse(savedTemplates);
-       // Merge default templates with saved ones to ensure new hardcoded ones appear if user hasn't modified them heavily
-       // Simple approach: prefer saved, but if we want to force update defaults we might need versioning.
-       // For now, we will just use saved. To reset, admin can clear cache or we add a reset button.
-       setWorkoutTemplates(parsedTemplates);
-    } else {
-       localStorage.setItem('workoutTemplates', JSON.stringify(defaultTemplates));
+    // Always merge default templates with local storage to ensure updates in code (like new templates) appear
+    const savedTemplatesStr = localStorage.getItem('workoutTemplates');
+    let finalTemplates = defaultTemplates;
+
+    if (savedTemplatesStr) {
+       const savedTemplates: WorkoutPlan[] = JSON.parse(savedTemplatesStr);
+       // Add any user-created templates that are NOT in default
+       // This is a simple merge strategy. In a real app, IDs would be better.
+       const customTemplates = savedTemplates.filter(st => 
+         !defaultTemplates.some(dt => dt.planName === st.planName && dt.targetEquipment === st.targetEquipment)
+       );
+       finalTemplates = [...defaultTemplates, ...customTemplates];
     }
+    
+    setWorkoutTemplates(finalTemplates);
+    localStorage.setItem('workoutTemplates', JSON.stringify(finalTemplates));
 
     const savedSession = localStorage.getItem('currentUser');
     if (savedSession) {
@@ -471,25 +584,35 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // --- Template Bank Logic ---
   
   const findTemplate = (prefs: UserPreferences): WorkoutPlan | null => {
-    // Basic filtering based on Goal and Level
-    // For 'equipment', we generally assume templates are gym-based unless specified 'bodyweight'
-    // but for simplicity we filter mainly by goal/level to ensure we return *something*.
+    // CRITICAL: Filter by Equipment FIRST.
+    // We never want to show a Gym workout to someone with only Bodyweight.
+    const equipmentMatches = workoutTemplates.filter(t => t.targetEquipment === prefs.equipment);
     
-    let matches = workoutTemplates.filter(t => 
+    if (equipmentMatches.length === 0) {
+        // If literally no template matches the equipment, we shouldn't return a wrong one.
+        // But since we hardcoded templates for all 4 types, this shouldn't happen.
+        // Fallback: Return null to force AI (or error handle).
+        return null;
+    }
+
+    // 1. Exact Match (Goal + Level) within Equipment
+    const exactMatches = equipmentMatches.filter(t => 
       t.targetGoal === prefs.goal && 
       t.targetLevel === prefs.level
     );
-    
-    // Fallback logic: if no exact match for level, try to find same goal but adjacent level
-    if (matches.length === 0) {
-         matches = workoutTemplates.filter(t => t.targetGoal === prefs.goal);
-    }
+    if (exactMatches.length > 0) return exactMatches[Math.floor(Math.random() * exactMatches.length)];
 
-    if (matches.length > 0) {
-      return matches[Math.floor(Math.random() * matches.length)];
-    }
+    // 2. Goal Match (Any Level) within Equipment
+    // If we don't have "Advanced" for "Weight Loss", show "Intermediate".
+    const goalMatches = equipmentMatches.filter(t => t.targetGoal === prefs.goal);
+    if (goalMatches.length > 0) return goalMatches[Math.floor(Math.random() * goalMatches.length)];
+
+    // 3. Level Match (Any Goal) within Equipment
+    const levelMatches = equipmentMatches.filter(t => t.targetLevel === prefs.level);
+    if (levelMatches.length > 0) return levelMatches[Math.floor(Math.random() * levelMatches.length)];
     
-    return null;
+    // 4. Last Resort: Any workout with the correct equipment
+    return equipmentMatches[Math.floor(Math.random() * equipmentMatches.length)];
   };
 
   const saveTemplate = (workout: WorkoutPlan) => {
@@ -509,7 +632,7 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       updateContent, 
       blogPosts, 
       addPost, 
-      deletePost,
+      deletePost, 
       toggleLike,
       addComment,
       saveWorkout,
