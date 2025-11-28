@@ -49,16 +49,16 @@ const Trainers: React.FC = () => {
                    <Editable 
                       id={`trainer-${trainer.id}-img`} 
                       type="image" 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       defaultContent="" // Content provided by Context defaults
                    />
                 </div>
                 
-                {/* Gradient Overlay */}
+                {/* Gradient Overlay - Subtle bottom only for text legibility */}
                 <div 
-                   className="absolute inset-0 opacity-80 group-hover:opacity-60 transition-opacity pointer-events-none"
+                   className="absolute inset-0 pointer-events-none"
                    style={{
-                      background: `linear-gradient(to top, #0F172A 10%, transparent 60%)`
+                      background: `linear-gradient(to top, #0F172A 10%, transparent 40%)`
                    }}
                 ></div>
 

@@ -136,7 +136,7 @@ const Classes: React.FC = () => {
                 id={cls.id} 
                 type="image" 
                 defaultContent={cls.defaultImage}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-50 grayscale group-hover:grayscale-0"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent pointer-events-none"></div>
               

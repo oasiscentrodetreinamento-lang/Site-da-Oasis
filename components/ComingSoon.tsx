@@ -18,21 +18,21 @@ const ComingSoon: React.FC = () => {
       {/* Caution Tape Bar */}
       <div 
         onClick={() => setIsExpanded(!isExpanded)}
-        className="cursor-pointer relative h-20 overflow-hidden group shadow-xl border-y-4 border-slate-900"
+        className="cursor-pointer relative h-28 md:h-20 overflow-hidden group shadow-xl border-y-4 border-slate-900 flex items-center"
         style={{
           backgroundImage: 'repeating-linear-gradient(45deg, #FACC15, #FACC15 30px, #0F172A 30px, #0F172A 60px)'
         }}
       >
         <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
         <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-slate-900 border-2 border-brand transform -skew-x-12 px-8 py-2 shadow-[0_0_15px_rgba(0,0,0,0.8)] transition-transform duration-300 group-hover:scale-110">
-                <h3 className="text-2xl md:text-3xl font-display font-bold text-brand uppercase tracking-widest transform skew-x-12 flex items-center gap-3">
-                    <span className="animate-pulse">⚠️</span>
-                    <span className="hidden md:inline">Área Interditada:</span> Obras em Andamento
-                    <span className="text-white text-sm md:text-lg ml-2 bg-brand/20 px-2 py-1 rounded normal-case font-sans tracking-normal opacity-80 group-hover:opacity-100">
+            <div className="bg-slate-900 border-2 border-brand transform -skew-x-12 px-4 md:px-8 py-2 shadow-[0_0_15px_rgba(0,0,0,0.8)] transition-transform duration-300 group-hover:scale-110 text-center">
+                <h3 className="text-xl md:text-3xl font-display font-bold text-brand uppercase tracking-widest transform skew-x-12 flex flex-col md:flex-row items-center gap-2 md:gap-3 leading-tight">
+                    <span className="hidden md:inline animate-pulse">⚠️</span>
+                    <span>Área Interditada: Obras</span>
+                    <span className="text-white text-xs md:text-lg bg-brand/20 px-2 py-1 rounded normal-case font-sans tracking-normal opacity-100">
                         (Clique para Espiar)
                     </span>
-                    <span className="animate-pulse">⚠️</span>
+                    <span className="hidden md:inline animate-pulse">⚠️</span>
                 </h3>
             </div>
         </div>
@@ -62,12 +62,12 @@ const ComingSoon: React.FC = () => {
                         <Editable 
                             id="news-img-swim" 
                             type="image" 
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             defaultContent="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=2070&auto=format&fit=crop"
                         />
-                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
+                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 pointer-events-none"></div>
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
+                    <div className="p-4 md:p-6 flex flex-col flex-grow">
                         <div className="text-brand font-bold text-xs uppercase tracking-wider mb-2 bg-slate-800 inline-block px-2 py-1 rounded self-start">Piscinas</div>
                         <h3 className="text-2xl font-display font-bold text-white uppercase mb-2">Kids & Hidro</h3>
                         <p className="text-slate-300 text-sm leading-relaxed mb-4">
@@ -102,12 +102,12 @@ const ComingSoon: React.FC = () => {
                         <Editable 
                             id="news-img-fight" 
                             type="image" 
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             defaultContent="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=2069&auto=format&fit=crop"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 pointer-events-none"></div>
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
+                    <div className="p-4 md:p-6 flex flex-col flex-grow">
                         <div className="text-brand font-bold text-xs uppercase tracking-wider mb-2 bg-slate-800 inline-block px-2 py-1 rounded self-start">Artes Marciais</div>
                         <h3 className="text-2xl font-display font-bold text-white uppercase mb-2">Novo Dojo</h3>
                         <p className="text-slate-300 text-sm leading-relaxed mb-4">
@@ -142,12 +142,12 @@ const ComingSoon: React.FC = () => {
                         <Editable 
                             id="news-img-dance" 
                             type="image" 
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             defaultContent="https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?q=80&w=2070&auto=format&fit=crop"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 pointer-events-none"></div>
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
+                    <div className="p-4 md:p-6 flex flex-col flex-grow">
                         <div className="text-brand font-bold text-xs uppercase tracking-wider mb-2 bg-slate-800 inline-block px-2 py-1 rounded self-start">Dança</div>
                         <h3 className="text-2xl font-display font-bold text-white uppercase mb-2">Studio de Dança</h3>
                         <p className="text-slate-300 text-sm leading-relaxed mb-4">
