@@ -35,6 +35,9 @@ interface AdminContextType {
 }
 
 const defaultContent: Record<string, string> = {
+  // IMPORTANT: Paste your logo URL here to persist on Vercel
+  'navbar-logo': 'https://placehold.co/200x80/0f172a/FACC15?text=SUA+LOGO+AQUI', 
+  
   'hero-title': 'Centro de \nTreinamento',
   'hero-subtitle': 'Pilates, Spinning, Jump e Dança. Foco total em atendimento personalizado para transformar corpo e mente.',
   'hero-bg': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop',

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, WorkoutPlan } from '../types';
 import { useAdmin } from '../contexts/AdminContext';
+import Editable from './Editable';
 
 interface NavbarProps {
   onNavigate: (view: 'home' | 'blog', sectionId?: string) => void;
@@ -40,11 +41,13 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
       <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled || currentView === 'blog' || mobileMenuOpen ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-4 md:py-6'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center cursor-pointer group z-50" onClick={() => handleLinkClick(NavLink.HOME)}>
-             <div className="leading-none text-center">
-                <span className="block text-3xl font-display font-bold text-white tracking-wide group-hover:text-brand transition-colors">OASIS</span>
-                <span className="block text-[10px] font-sans font-bold text-brand uppercase tracking-[0.3em] -mt-1 group-hover:text-white transition-colors">Centro de Treinamento</span>
-             </div>
+          <div className="flex items-center cursor-pointer group z-50 h-16 w-48 relative" onClick={() => handleLinkClick(NavLink.HOME)}>
+             <Editable 
+                id="navbar-logo" 
+                type="image" 
+                defaultContent="https://placehold.co/200x80/0f172a/FACC15?text=SUA+LOGO+AQUI"
+                className="w-full h-full object-contain object-left transition-transform group-hover:scale-105"
+             />
           </div>
 
           {/* Desktop Links */}
