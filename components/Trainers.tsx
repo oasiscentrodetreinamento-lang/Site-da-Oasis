@@ -54,7 +54,7 @@ const Trainers: React.FC = () => {
                    />
                 </div>
                 
-                {/* Gradient Overlay - Subtle bottom only for text legibility */}
+                {/* Gradient Overlay - Subtle bottom only for text legibility, removed all other darkening */}
                 <div 
                    className="absolute inset-0 pointer-events-none"
                    style={{
@@ -73,10 +73,10 @@ const Trainers: React.FC = () => {
                        className="w-8 h-1 mb-2 rounded transition-all duration-300 group-hover:w-16"
                        style={{ backgroundColor: trainer.color }}
                     ></div>
-                    <h4 className="text-xl font-display font-bold text-white uppercase mb-1 pointer-events-auto">
+                    <h4 className="text-xl font-display font-bold text-white uppercase mb-1 pointer-events-auto drop-shadow-md">
                        <Editable id={`trainer-${trainer.id}-name`} defaultContent="Nome" />
                     </h4>
-                    <p className="text-slate-400 text-xs font-bold uppercase tracking-wider group-hover:text-white transition-colors pointer-events-auto">
+                    <p className="text-slate-200 text-xs font-bold uppercase tracking-wider group-hover:text-white transition-colors pointer-events-auto drop-shadow-md">
                        <Editable id={`trainer-${trainer.id}-role`} defaultContent="Cargo" />
                     </p>
                 </div>

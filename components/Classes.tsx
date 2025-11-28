@@ -138,17 +138,18 @@ const Classes: React.FC = () => {
                 defaultContent={cls.defaultImage}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent pointer-events-none"></div>
+              {/* Updated Gradient: Much lighter, only at the bottom for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
               
               <div className="absolute bottom-0 left-0 p-6 w-full">
                 <div className="flex justify-between items-center mb-2">
-                   <span className="text-brand text-xs font-bold uppercase tracking-wider block">{cls.time}</span>
+                   <span className="text-brand text-xs font-bold uppercase tracking-wider block drop-shadow-md">{cls.time}</span>
                    <span className="bg-brand text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
                       SAIBA MAIS
                    </span>
                 </div>
-                <h4 className="text-2xl font-display font-bold text-white uppercase mb-2 group-hover:text-brand transition-colors">{cls.title}</h4>
-                <p className="text-slate-300 text-sm line-clamp-2">
+                <h4 className="text-2xl font-display font-bold text-white uppercase mb-2 group-hover:text-brand transition-colors drop-shadow-md">{cls.title}</h4>
+                <p className="text-slate-200 text-sm line-clamp-2 drop-shadow-md font-medium">
                   {cls.description}
                 </p>
               </div>

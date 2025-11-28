@@ -65,7 +65,8 @@ const ComingSoon: React.FC = () => {
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             defaultContent="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=2070&auto=format&fit=crop"
                         />
-                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 pointer-events-none"></div>
+                         {/* Removed opacity-60, light gradient for text */}
+                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
                     </div>
                     <div className="p-4 md:p-6 flex flex-col flex-grow">
                         <div className="text-brand font-bold text-xs uppercase tracking-wider mb-2 bg-slate-800 inline-block px-2 py-1 rounded self-start">Piscinas</div>
@@ -105,7 +106,7 @@ const ComingSoon: React.FC = () => {
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             defaultContent="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=2069&auto=format&fit=crop"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 pointer-events-none"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
                     </div>
                     <div className="p-4 md:p-6 flex flex-col flex-grow">
                         <div className="text-brand font-bold text-xs uppercase tracking-wider mb-2 bg-slate-800 inline-block px-2 py-1 rounded self-start">Artes Marciais</div>
@@ -145,7 +146,7 @@ const ComingSoon: React.FC = () => {
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             defaultContent="https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?q=80&w=2070&auto=format&fit=crop"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 pointer-events-none"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
                     </div>
                     <div className="p-4 md:p-6 flex flex-col flex-grow">
                         <div className="text-brand font-bold text-xs uppercase tracking-wider mb-2 bg-slate-800 inline-block px-2 py-1 rounded self-start">Dança</div>
